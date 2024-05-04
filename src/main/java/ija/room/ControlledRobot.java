@@ -27,7 +27,7 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
     }
 
     public static ControlledRobot create(Environment env, Position pos) {
-        if (env.containsPosition(pos) && !env.obstacleAt(pos) && !env.robotAt(pos)) {
+        if (env.containsPosition(pos) && !env.obstacleAt(pos) && !env.robotAt(pos,null)) {
             ControlledRobot robot = new ControlledRobot(env, pos);
 
             if (env.addRobot(robot)) {
@@ -87,7 +87,7 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
                 return false;
         }
     
-        if (environment.containsPosition(new Position(newX, newY)) && !environment.obstacleAt(new Position(newX, newY)) && !environment.robotAt(new Position(newX, newY))) {
+        if (environment.containsPosition(new Position(newX, newY)) && !environment.obstacleAt(new Position(newX, newY)) && !environment.robotAt(new Position(newX, newY),this)) {
             Position old = new Position(this.position.getCol(),this.position.getRow());
 												this.prevPosition = old;
 												this.position = new Position(newX, newY);
@@ -134,8 +134,8 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
             default:
                 return false; 
         }
-        System.out.println(environment.robotAt(new Position(newX, newY)));
-        return environment.containsPosition(new Position(newX, newY)) && !environment.obstacleAt(new Position(newX, newY)) && !environment.robotAt(new Position(newX, newY));
+
+        return environment.containsPosition(new Position(newX, newY)) && !environment.obstacleAt(new Position(newX, newY)) && !environment.robotAt(new Position(newX, newY),this);
     }
 
 

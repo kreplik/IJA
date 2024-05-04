@@ -10,7 +10,7 @@ public interface ToolEnvironment {
 				int cols();
 				boolean obstacleAt(Position p);
 
-				boolean robotAt(Position p);
+				boolean robotAt(Position p, ToolRobot sender);
 				List<ToolRobot> robots();
 				List<Robot> autorobots();
 				Set<Robot> getList();

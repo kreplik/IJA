@@ -288,7 +288,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				});
 
 				try {
-					Thread.sleep(300); // Adjust the delay between movements
+					Thread.sleep(200); // Adjust the delay between movements
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -302,40 +302,43 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 	private void moveRobot(double newX, double newY) {
 		// Create a translate transition
-		TranslateTransition transition = new TranslateTransition(Duration.seconds(1), this.activeRobot);
+		TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), this.activeRobot);
 		transition.setToX(newX - this.activeRobot.getCenterX());
 		transition.setToY(newY - this.activeRobot.getCenterY());
 
-		// Set up event handler to update robot position after animation completes
-		transition.setOnFinished(event -> {
-			this.activeRobot.setTranslateX(0);
-			this.activeRobot.setTranslateY(0);
-			this.activeRobot.setCenterX(newX);
-			this.activeRobot.setCenterY(newY);
-		});
 
-		this.robotViews.remove(this.activeRobot);
-		root.getChildren().remove(this.activeRobot);
+		try {
 
-		if(controlledRobots.contains(this.activeRobot)){
-			Circle circle = new Circle(newX, newY, 25, Color.RED);
-			root.getChildren().add(circle);
-			this.controlledRobots.add(circle);
-			this.controlledRobots.remove(this.activeRobot);
+			transition.setOnFinished(event -> {
+				this.activeRobot.setTranslateX(0);
+				this.activeRobot.setTranslateY(0);
+				this.activeRobot.setCenterX(newX);
+				this.activeRobot.setCenterY(newY);
+			});
+
+			this.robotViews.remove(this.activeRobot);
+			root.getChildren().remove(this.activeRobot);
+
+			if (controlledRobots.contains(this.activeRobot)) {
+				Circle circle = new Circle(newX, newY, 25, Color.RED);
+				root.getChildren().add(circle);
+				this.controlledRobots.add(circle);
+				this.controlledRobots.remove(this.activeRobot);
 
 
 				this.activeControlledR = circle;
 				this.robotViews.add(circle);
 
-		}
-		else {
-			Circle newRobot = new Circle(newX, newY, 25, Color.YELLOW);
-			this.robotViews.add(newRobot);
-			root.getChildren().add(newRobot);
-		}
+			}	else {
+				Circle newRobot = new Circle(newX, newY, 25, Color.YELLOW);
+				this.robotViews.add(newRobot);
+				root.getChildren().add(newRobot);
+			}
 
-		// Play the animation
-		transition.play();
+			// Play the animation
+			transition.play();
+		}
+		catch (Exception ignored){}
 	}
 
 

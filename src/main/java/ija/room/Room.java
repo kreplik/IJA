@@ -84,14 +84,14 @@ public class Room implements Environment {
 
     @Override
     public boolean containsPosition(Position pos) {
-        return pos.getRow() >= 0 && pos.getRow() < height && pos.getCol() >= 0 && pos.getCol() < width;
+        return pos.getRow() >= 25 && pos.getRow() < height - 70 && pos.getCol() >= 25 && pos.getCol() < width - 25;
     }
 
     @Override
-    public boolean robotAt(Position pos) {
+    public boolean robotAt(Position pos, ToolRobot sender) {
         final double radius = 25; // Radius of the robot
         for (Robot robot : this.robots) {
-            if (robot != this && robot.getPosition().isNear(pos, radius)) {
+            if (robot != sender && robot.getPosition().isNear(pos, radius)) {
                 return true;
             }
         }
