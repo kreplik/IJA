@@ -20,6 +20,7 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
     private ControlledRobot(Environment environment, Position position) {
         this.environment = environment;
         this.position = position;
+								this.prevPosition = position;
         this.angle = 0;
 								observers = new ArrayList<>();
   
@@ -51,9 +52,9 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
 
     @Override
     public boolean move() {
-        int newX = position.getCol();
-        int newY = position.getRow();
-        switch (angle) {
+        int newX = this.position.getCol();
+        int newY = this.position.getRow();
+        switch (this.angle) {
 									case 0:
 										newY -=10;
 										break;
@@ -87,7 +88,8 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
         }
     
         if (environment.containsPosition(new Position(newX, newY)) && !environment.obstacleAt(new Position(newX, newY)) && !environment.robotAt(new Position(newX, newY))) {
-            this.prevPosition = this.position;
+            Position old = new Position(this.position.getCol(),this.position.getRow());
+												this.prevPosition = old;
 												this.position = new Position(newX, newY);
             this.notifyObservers();
 
@@ -98,9 +100,9 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
     
     @Override
     public boolean canMove() {
-        int newX = position.getCol();
-        int newY = position.getRow();
-        switch (angle) {
+        int newX = this.position.getCol();
+        int newY = this.position.getRow();
+        switch (this.angle) {
             case 0:
                 newY -=10;
                 break;
@@ -139,13 +141,13 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
 
     @Override
     public void turn(int num) {
-        angle = (angle + (45*num)) % 360;
+        this.angle = (this.angle + (45*num)) % 360;
         this.notifyObservers();
     }
 
     @Override
     public void turn() {
-        angle = (angle + 90) % 360;
+        this.angle = (this.angle + 90) % 360;
         //this.notifyObservers();
     }
 
@@ -161,7 +163,7 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
 
     @Override
     public int angle() {
-        return angle;
+        return this.angle;
     }
 
     @Override

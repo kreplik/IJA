@@ -119,7 +119,7 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 		root = new BorderPane();
 		//root.setStyle("-fx-background-color: #192a40;");
 
-		Image img = new Image("file:data/background.jpg");
+		Image img = new Image("file:lib/background.jpg");
 		ImageView imageView = new ImageView(img);
 		imageView.setFitHeight(800);
 		imageView.setFitWidth(800);
@@ -147,6 +147,7 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 			root.getChildren().add(circle);
 		}
 
+		System.out.println(robotViews);
 		Circle robot = new Circle(50, 50, 10, Color.YELLOW);
 		root.getChildren().add(robot);
 
@@ -182,7 +183,7 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 
 		});
 
-		Scene scene = new Scene(root, room.cols(), room.rows());
+		Scene scene = new Scene(root, room.cols()-20, room.rows()-20);
 		root.setId("pane");
 		//Scene scene = new Scene(container);
 
@@ -274,9 +275,11 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 
 	public Circle getRobotsView(Position pos)
 	{
+		System.out.println(robotViews);
+
 		for(Circle circle : robotViews) {
 			Position prevPos = new Position((int) circle.getCenterX(), (int) circle.getCenterY());
-			System.out.println("OLD POSITION: "+ prevPos + "NEW: " + pos);
+			System.out.println("CIRCLES: "+ prevPos + "OLD ROBOTS: " + pos);
 			if(prevPos.equals(pos)){
 
 				return circle;

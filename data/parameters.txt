@@ -7,6 +7,7 @@ positionX=120
 positionY=520
 
 
+
 [Obstacle1]
 positionX=500
 positionY=500
