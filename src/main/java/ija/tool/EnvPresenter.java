@@ -339,189 +339,31 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	}
 
 
-	@Override
 	public void update(Observable o) {
+    if (o instanceof ToolRobot) {
+        Position PrevPos = ((ToolRobot) o).getPrevPosition();
+        Position newPos = ((ToolRobot) o).getPosition();
+
+        this.activeRobot = getRobotsView(PrevPos);
+        if (this.activeRobot != null) {
+            moveRobot(newPos.getCol(), newPos.getRow());
+        } else {
+            System.out.println("Robot not found for previous position: " + PrevPos);
+        }
+    }
+}
 
 
-	    if (o instanceof ToolRobot) {
-
-						Position PrevPos = ((ToolRobot) o).getPrevPosition();
-						Position newPos = ((ToolRobot) o).getPosition();
-
-						this.activeRobot = getRobotsView(PrevPos);
-						moveRobot(newPos.getCol(),newPos.getRow());
-
+	public Circle getRobotsView(Position pos) {
+	    for (Circle circle : robotViews) {
+	        Position circlePos = new Position((int) circle.getCenterX(), (int) circle.getCenterY());
+	        if (circlePos.equals(pos)) {
+	            return circle;
+	        }
 	    }
-
+	    return null;  // Explicitly return null if no robot is found
 	}
 
-	public Circle getRobotsView(Position pos)
-	{
-		System.out.println(robotViews);
-
-		for(Circle circle : this.robotViews) {
-			Position prevPos = new Position((int) circle.getCenterX(), (int) circle.getCenterY());
-			System.out.println("CIRCLES: "+ prevPos + "OLD ROBOTS: " + pos);
-			if(prevPos.equals(pos)){
-
-				return circle;
-			}
-		}
-		return null;
-	}
-
-/*
-	public void open() {
-
-
-
-		// Create the main JFrame
-		JFrame frame = new JFrame("IJA GAME");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLayout(new BorderLayout());
-
-
-		for (ToolRobot toolRobot : this.robots) {
-			toolRobot.addObserver(this);
-		}
-
-		// Create the main panel to hold the field views
-		JPanel mainPanel = new JPanel(new GridLayout(environment.rows(), environment.cols()));
-
-		// Create and add FieldViews for each position in the environment
-		for (int i = 0; i < environment.rows(); i++) {
-			for (int j = 0; j < environment.cols(); j++) {
-				Position pos = new Position(j, i);
-				FieldView fieldView = new FieldView(pos);
-
-				mainPanel.add(fieldView);
-				fieldViews.put(pos, fieldView);
-
-				fieldView.addMouseListener(this);
-
-				fieldView.setHasObstacle(environment.obstacleAt(pos));
-				fieldView.setHasRobot(environment.robotAt(pos), 0,0);
-
-			}
-		}
-
-
-		// Create navbar panel
-		JPanel navbar = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
-
-		// Add buttons or other controls to the navbar
-		JButton addObstacle = new JButton("Add Obstacle");
-		navbar.add(addObstacle);
-
-		addObstacle.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Show input dialog to get obstacle parameters
-				while (true) {
-					String obstaclePosition = JOptionPane.showInputDialog(null, "Enter obstacle position as \"x,y\":");
-					String[] positionParameters = obstaclePosition.split(",");
-					Position position = new Position(Integer.parseInt(positionParameters[0]), Integer.parseInt(positionParameters[1]));
-					Environment env = (Environment) environment;
-					if (!env.createObstacleAt(position.getCol(), position.getRow()))	{
-						JOptionPane.showMessageDialog(null, "Occupied position\n", "Add obstacle", JOptionPane.INFORMATION_MESSAGE);
-					}
-					else {
-							System.out.println("Obstacle has been created on position: <" +  position.getRow() + "," + position.getCol() + ">");
-							return;
-					}
-				}
-			}
-		});
-
-		JButton addButton = new JButton("Add Robot");
-		navbar.add(addButton);
-
-		addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Loop to keep asking for input until valid or cancelled
-                while (true) {
-                    String robotPosition = JOptionPane.showInputDialog(frame, "Enter robot position as \"x,y\":");
-                    if (robotPosition == null || robotPosition.trim().isEmpty()) {
-                        break;
-                    }
-
-                    try {
-                        String[] positionParameters = robotPosition.split(",");
-                        if (positionParameters.length != 2) {
-                            JOptionPane.showMessageDialog(frame, "Invalid input. Please enter coordinates as x,y", "Invalid Input", JOptionPane.ERROR_MESSAGE);
-                            continue;
-                        }
-
-                        int x = Integer.parseInt(positionParameters[0].trim());
-                        int y = Integer.parseInt(positionParameters[1].trim());
-                        Position pos = new Position(x, y);
-                        Environment env = (Environment) environment;
-
-                        if (!env.robotAt(pos) && !env.obstacleAt(pos)) {
-                            Robot robot = ControlledRobot.create(env, pos);
-                            if (robot != null) {
-                                robots.add(robot);
-								System.out.println("Controlled Robot has been created on position: <" + x + "," + y + ">");
-                                robot.addObserver(EnvPresenter.this);
-                                break; // exit the loop after successfully adding a robot
-                            } else {
-                                JOptionPane.showMessageDialog(frame, "Could not create robot at the specified position.", "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(frame, "Position already occupied by another robot or obstacle.", "Position Occupied", JOptionPane.WARNING_MESSAGE);
-                        }
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(frame, "Invalid coordinates. Please enter valid integer coordinates.", "Invalid Coordinates", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                }
-            }
-        });
-
-        JButton move = new JButton("Move");
-		navbar.add(move);
-            move.addActionListener(new ActionListener() {
-		    	@Override
-		    	public void actionPerformed(ActionEvent e) {
-		    		MoveForward();
-					System.out.println("Controlled Robot has moved forward");
-		    	}
-		    });
-
-		JButton left = new JButton("Left");
-		navbar.add(left);
-            left.addActionListener(new ActionListener() {
-		    	@Override
-		    	public void actionPerformed(ActionEvent e) {
-		    		MoveLeft();
-					System.out.println("Controlled Robot has turned left");
-		    	}
-		    });
-
-		JButton right = new JButton("Right");
-		navbar.add(right);
-		    right.addActionListener(new ActionListener() {
-		    	@Override
-		    	public void actionPerformed(ActionEvent e) {
-		    		MoveRight();
-					System.out.println("Controlled Robot has moved right");
-		    	}
-		    });
-
-		// Additional navbar elements can be added here
-
-		// Add the main panel and navbar to the frame
-		frame.add(mainPanel, BorderLayout.CENTER);
-		frame.add(navbar, BorderLayout.SOUTH);
-
-		// Pack and set visible
-		frame.pack();
-		frame.setSize(frame.getWidth(), frame.getHeight() + 50); // Adjust height to accommodate navbar
-		frame.setVisible(true);
-	}
-*/
 
 	public FieldView fieldAt(Position pos) {
 		return fieldViews.get(pos);

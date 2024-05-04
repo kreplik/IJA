@@ -4,9 +4,11 @@ height=600
 
 [Robot1]
 positionX=120
-positionY=520
+positionY=500
 
-
+[Robot2]
+positionX=320
+positionY=500
 
 [Obstacle1]
 positionX=500
