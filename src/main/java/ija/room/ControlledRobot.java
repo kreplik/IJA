@@ -148,7 +148,7 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
     @Override
     public void turn() {
         this.angle = (this.angle + 90) % 360;
-        //this.notifyObservers();
+        this.notifyObservers();
     }
 
     @Override

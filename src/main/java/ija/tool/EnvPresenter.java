@@ -49,8 +49,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	private ToolRobot controlledRobot;
     public Set<Robot> autorobots;
 
-	private GridPane mainPanel;
-	private Pane navbar;
 	private BorderPane root;
 
 	private static Map<String, Map<String, Integer>> parameters;
@@ -61,6 +59,10 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 	private final Set<Circle> robotViews = new HashSet<>();
 	private final Set<Circle> controlledRobots = new HashSet<>();
+	private Map<Circle, Circle> directionIndicators = new HashMap<>();
+	private Map<Circle, Robot> robotMap = new HashMap<>();
+
+
 
 	public EnvPresenter() {
 		this.fieldViews = new HashMap<>();
@@ -90,9 +92,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		this.obstacles = room.getObstacles();
 
 
-
-
-		int autoRobotsIndex = 0;
 		for(Map.Entry<String, Map<String, Integer>> entry : parameters.entrySet())
 		{
 			if(entry.getKey().contains("Obstacle")) {
@@ -138,18 +137,31 @@ public class EnvPresenter extends Application implements Observable.Observer {
 			root.getChildren().add(rectangle);
 		}
 
-		for(Robot robot : this.autorobots){
-			Position pos = new Position(robot.getPosition().getCol(),robot.getPosition().getRow());
-			Circle circle = new Circle(pos.getCol(),pos.getRow(),25,Color.YELLOW);
-			robot.addObserver(this);
-			this.robotViews.add(circle);
-			root.getChildren().add(circle);
+		for (Robot robot : this.autorobots) {
+		    Position pos = new Position(robot.getPosition().getCol(), robot.getPosition().getRow());
+		    Circle robotBody = new Circle(pos.getCol(), pos.getRow(), 25, Color.YELLOW);
+
+		    // Direction indicator creation (as you did before)
+		    double angleInRadians = Math.toRadians(robot.angle());
+		    double offsetX = (25 - 5) * Math.cos(angleInRadians);
+		    double offsetY = (25 - 5) * Math.sin(angleInRadians);
+		    Circle directionIndicator = new Circle(
+		        pos.getCol() + offsetX,
+		        pos.getRow() + offsetY,
+		        5,
+		        Color.BLACK
+		    );
+
+		    robot.addObserver(this);
+		    this.robotViews.add(robotBody);
+		    root.getChildren().addAll(robotBody, directionIndicator);
+		    directionIndicators.put(robotBody, directionIndicator);
+		    robotMap.put(robotBody, robot);  // Link the Circle to the Robot
 		}
 
-		System.out.println(robotViews);
-		Circle robot = new Circle(50, 50, 10, Color.YELLOW);
-		root.getChildren().add(robot);
 
+
+		System.out.println(robotViews);
 
 		//moveRobot(200, 200,robot);
 
@@ -288,7 +300,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				});
 
 				try {
-					Thread.sleep(200); // Adjust the delay between movements
+					Thread.sleep(300); // Adjust the delay between movements
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -302,59 +314,54 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 	private void moveRobot(double newX, double newY) {
 		// Create a translate transition
-		TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), this.activeRobot);
+		TranslateTransition transition = new TranslateTransition(Duration.seconds(1), this.activeRobot);
 		transition.setToX(newX - this.activeRobot.getCenterX());
 		transition.setToY(newY - this.activeRobot.getCenterY());
 
+		// Set up event handler to update robot position after animation completes
+		transition.setOnFinished(event -> {
+			this.activeRobot.setTranslateX(0);
+			this.activeRobot.setTranslateY(0);
+			this.activeRobot.setCenterX(newX);
+			this.activeRobot.setCenterY(newY);
+		});
 
-		try {
+		this.robotViews.remove(this.activeRobot);
+		root.getChildren().remove(this.activeRobot);
 
-			transition.setOnFinished(event -> {
-				this.activeRobot.setTranslateX(0);
-				this.activeRobot.setTranslateY(0);
-				this.activeRobot.setCenterX(newX);
-				this.activeRobot.setCenterY(newY);
-			});
-
-			this.robotViews.remove(this.activeRobot);
-			root.getChildren().remove(this.activeRobot);
-
-			if (controlledRobots.contains(this.activeRobot)) {
-				Circle circle = new Circle(newX, newY, 25, Color.RED);
-				root.getChildren().add(circle);
-				this.controlledRobots.add(circle);
-				this.controlledRobots.remove(this.activeRobot);
+		if(controlledRobots.contains(this.activeRobot)){
+			Circle circle = new Circle(newX, newY, 25, Color.RED);
+			root.getChildren().add(circle);
+			this.controlledRobots.add(circle);
+			this.controlledRobots.remove(this.activeRobot);
 
 
 				this.activeControlledR = circle;
 				this.robotViews.add(circle);
 
-			}	else {
-				Circle newRobot = new Circle(newX, newY, 25, Color.YELLOW);
-				this.robotViews.add(newRobot);
-				root.getChildren().add(newRobot);
-			}
-
-			// Play the animation
-			transition.play();
 		}
-		catch (Exception ignored){}
+		else {
+			Circle newRobot = new Circle(newX, newY, 25, Color.YELLOW);
+			this.robotViews.add(newRobot);
+			root.getChildren().add(newRobot);
+		}
+
+		// Play the animation
+		transition.play();
 	}
 
 
 	public void update(Observable o) {
-    if (o instanceof ToolRobot) {
-        Position PrevPos = ((ToolRobot) o).getPrevPosition();
-        Position newPos = ((ToolRobot) o).getPosition();
+	    if (o instanceof ToolRobot) {
+	        ToolRobot robot = (ToolRobot) o;
+	        Position newPos = robot.getPosition();
+	        Circle robotBody = getRobotsView(new Position(robot.getPrevPosition().getCol(), robot.getPrevPosition().getRow()));
+	        if (robotBody != null) {
+	            moveeRobot(robotBody, newPos.getCol(), newPos.getRow());
+	        }
+	    }
+	}
 
-        this.activeRobot = getRobotsView(PrevPos);
-        if (this.activeRobot != null) {
-            moveRobot(newPos.getCol(), newPos.getRow());
-        } else {
-            System.out.println("Robot not found for previous position: " + PrevPos);
-        }
-    }
-}
 
 
 	public Circle getRobotsView(Position pos) {
@@ -427,6 +434,37 @@ public class EnvPresenter extends Application implements Observable.Observer {
         }
         return false;
     }
+
+	private void moveeRobot(Circle robotBody, double newX, double newY) {
+	    if (robotBody != null) {
+	        // Update the robot's main body position
+	        robotBody.setCenterX(newX);
+	        robotBody.setCenterY(newY);
+		
+	        // Assuming `robotMap` maps each Circle to its corresponding Robot object
+	        Robot robot = robotMap.get(robotBody);
+	        if (robot != null) {
+	            // Convert angle to radians; adjust for GUI coordinate system
+	            double angleInRadians = Math.toRadians(robot.angle()); // Convert angle for correct orientation
+			
+	            // Adjusting for the described directions:
+	            // 0 degrees is up (-sin), 90 degrees is right (cos), 180 degrees is down (+sin), 270 degrees is left (-cos)
+	            double offsetX = (25 - 5) * Math.sin(angleInRadians);  // sin for horizontal offset
+	            double offsetY = -(25 - 5) * Math.cos(angleInRadians); // -cos for vertical offset (GUI has inverted y-axis)
+			
+	            Circle directionIndicator = directionIndicators.get(robotBody);
+	            if (directionIndicator != null) {
+	                directionIndicator.setCenterX(newX + offsetX);
+	                directionIndicator.setCenterY(newY + offsetY);
+	            }
+	        } else {
+	            System.out.println("No robot found for this body");
+	        }
+	    } else {
+	        System.out.println("Robot body cannot be null");
+	    }
+	}
+
 
 
 }
