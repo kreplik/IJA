@@ -170,7 +170,10 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		navbar.setHgap(10);
 
 		Button addObstacle = new Button("Add Obstacle");
+		addObstacle.setStyle("-fx-background-color: #000000; -fx-text-fill: white; -fx-font-size: 16px;");
+
 		addObstacle.setOnAction(e -> {
+			Stage stage = new Stage();
 			// Create input components
 			TextField positionInput = new TextField();
 			Label positionLabel = new Label("Enter obstacle position as \"x,y\":");
@@ -188,13 +191,13 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				Rectangle obstacle = new Rectangle(position.getCol(),position.getRow(),50,50);
 				obstacle.setFill(Color.BLACK);
 				root.getChildren().add(obstacle);
-
+				stage.close();
 			});
 
 			// Create a container to hold input components
 			VBox container = new VBox(positionLabel, positionInput, confirmButton);
 			Scene scene = new Scene(container);
-			Stage stage = new Stage();
+
 			stage.setScene(scene);
 			stage.show();
 
@@ -202,7 +205,10 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		});
 
 		Button addRobot = new Button("Add Robot");
+		addRobot.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px;");
+
 		addRobot.setOnAction(e -> {
+			Stage stage = new Stage();
 			// Create input components
 			TextField positionInput = new TextField();
 			Label positionLabel = new Label("Enter robot's position as \"x,y\":");
@@ -223,6 +229,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 					root.getChildren().add(circle);
 					this.controlledRobots.add(circle);
 					circle.setOnMouseClicked(event1 ->{
+						circle.setFill(Color.GREEN);
 						//Circle newcircle = new Circle(circle.getCenterX(), circle.getCenterY(), 25, Color.BLUE);
 						this.activeControlledR = circle;
 						//root.getChildren().add(circle);
@@ -231,7 +238,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 					});
 
 				}
-
+				stage.close();
 
 			});
 
@@ -239,7 +246,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 			// Create a container to hold input components
 			VBox container = new VBox(positionLabel, positionInput, confirmButton);
 			Scene scene = new Scene(container);
-			Stage stage = new Stage();
+
 			stage.setScene(scene);
 			stage.show();
 
@@ -259,6 +266,30 @@ public class EnvPresenter extends Application implements Observable.Observer {
 			}
 		});
 
+		Button turnR = new Button("Right");
+
+		turnR.setOnAction(event ->{
+			Set<Robot> robotList = environment.getList();
+			for(Robot robot : robotList){
+				Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
+				if(robot.getPosition().equals(pos)){
+					robot.turn(1);
+				}
+			}
+		});
+
+		Button turnL = new Button("Left");
+
+		turnL.setOnAction(event ->{
+			Set<Robot> robotList = environment.getList();
+			for(Robot robot : robotList){
+				Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
+				if(robot.getPosition().equals(pos)){
+					robot.turn(-1);
+				}
+			}
+		});
+
 
 
 		Scene scene = new Scene(root, room.cols(), room.rows());
@@ -274,6 +305,8 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		navbar.getChildren().add(addObstacle);
 		navbar.getChildren().add(addRobot);
 		navbar.getChildren().add(move);
+		navbar.getChildren().add(turnR);
+		navbar.getChildren().add(turnL);
 
 
 		// Add other buttons to the navbar and set their event handlers similarly
