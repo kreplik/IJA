@@ -142,7 +142,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 			Position pos = new Position(robot.getPosition().getCol(),robot.getPosition().getRow());
 			Circle circle = new Circle(pos.getCol(),pos.getRow(),25,Color.YELLOW);
 			robot.addObserver(this);
-			robotViews.add(circle);
+			this.robotViews.add(circle);
 			root.getChildren().add(circle);
 		}
 
@@ -208,15 +208,16 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				if(newRobot != null){
 					newRobot.addObserver(this);
 					Circle circle = new Circle(position.getCol(), position.getRow(), 25, Color.RED);
-					circle.setOnMouseClicked(event1 ->{
-						this.activeControlledR = circle;
-						root.getChildren().remove(circle);
-						Circle newcircle = new Circle(circle.getCenterX(), circle.getCenterY(), 25, Color.BLUE);
-						root.getChildren().add(newcircle);
-					});
-					controlledRobots.add(circle);
-					robotViews.add(circle);
 					root.getChildren().add(circle);
+					this.controlledRobots.add(circle);
+					circle.setOnMouseClicked(event1 ->{
+						//Circle newcircle = new Circle(circle.getCenterX(), circle.getCenterY(), 25, Color.BLUE);
+						this.activeControlledR = circle;
+						//root.getChildren().add(circle);
+
+						this.robotViews.add(circle);
+					});
+
 				}
 
 
@@ -313,11 +314,25 @@ public class EnvPresenter extends Application implements Observable.Observer {
 			this.activeRobot.setCenterY(newY);
 		});
 
-		robotViews.remove(this.activeRobot);
+		this.robotViews.remove(this.activeRobot);
 		root.getChildren().remove(this.activeRobot);
-		Circle newRobot = new Circle(newX,newY,25,Color.YELLOW);
-		robotViews.add(newRobot);
-		root.getChildren().add(newRobot);
+
+		if(controlledRobots.contains(this.activeRobot)){
+			Circle circle = new Circle(newX, newY, 25, Color.RED);
+			root.getChildren().add(circle);
+			this.controlledRobots.add(circle);
+			this.controlledRobots.remove(this.activeRobot);
+
+
+				this.activeControlledR = circle;
+				this.robotViews.add(circle);
+
+		}
+		else {
+			Circle newRobot = new Circle(newX, newY, 25, Color.YELLOW);
+			this.robotViews.add(newRobot);
+			root.getChildren().add(newRobot);
+		}
 
 		// Play the animation
 		transition.play();
@@ -344,7 +359,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	{
 		System.out.println(robotViews);
 
-		for(Circle circle : robotViews) {
+		for(Circle circle : this.robotViews) {
 			Position prevPos = new Position((int) circle.getCenterX(), (int) circle.getCenterY());
 			System.out.println("CIRCLES: "+ prevPos + "OLD ROBOTS: " + pos);
 			if(prevPos.equals(pos)){
