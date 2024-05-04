@@ -229,6 +229,11 @@ public class EnvPresenter extends Application implements Observable.Observer {
 					root.getChildren().add(circle);
 					this.controlledRobots.add(circle);
 					circle.setOnMouseClicked(event1 ->{
+						for(Circle allRobots : this.controlledRobots){
+							if(!allRobots.equals(circle)){
+								allRobots.setFill(Color.RED);
+							}
+						}
 						circle.setFill(Color.GREEN);
 						//Circle newcircle = new Circle(circle.getCenterX(), circle.getCenterY(), 25, Color.BLUE);
 						this.activeControlledR = circle;
