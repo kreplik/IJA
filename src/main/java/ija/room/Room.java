@@ -89,9 +89,9 @@ public class Room implements Environment {
 
     @Override
     public boolean robotAt(Position pos) {
-        
+        final double radius = 25; // Radius of the robot
         for (Robot robot : this.robots) {
-            if (robot.getPosition().equals(pos)) {
+            if (robot != this && robot.getPosition().isNear(pos, radius)) {
                 return true;
             }
         }

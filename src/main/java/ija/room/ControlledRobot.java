@@ -134,7 +134,7 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
             default:
                 return false; 
         }
-    
+        System.out.println(environment.robotAt(new Position(newX, newY)));
         return environment.containsPosition(new Position(newX, newY)) && !environment.obstacleAt(new Position(newX, newY)) && !environment.robotAt(new Position(newX, newY));
     }
 

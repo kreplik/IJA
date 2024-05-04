@@ -26,6 +26,12 @@ public class Position {
         return this.row == position.row && this.col == position.col;
     }
 
+    public boolean isNear(Position other, double radius) {
+        double dx = this.col - other.col;
+        double dy = this.row - other.row;
+        return Math.sqrt(dx * dx + dy * dy) <= radius + radius; // Check if the distance is less than or equal to the sum of the radii
+    }
+    
 	public boolean validPosition(Position other) {
 		int dx = this.col - other.col;
 		int dy = this.row - other.row;

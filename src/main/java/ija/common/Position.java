@@ -26,7 +26,6 @@ public class Position {
     }
 
 
-
     @Override
     public int hashCode() {
         int result = 31 * row + col;
