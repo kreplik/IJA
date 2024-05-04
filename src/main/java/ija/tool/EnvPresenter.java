@@ -15,16 +15,14 @@ import ija.tool.view.RobotView;
 
 import javax.swing.*;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 
+import javafx.scene.input.MouseEvent;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -42,7 +40,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 
-public class EnvPresenter extends Application implements Observable.Observer,MouseListener {
+public class EnvPresenter extends Application implements Observable.Observer {
 	private ToolEnvironment environment;
 	public Map<Position, FieldView> fieldViews;
 
@@ -53,15 +51,16 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 
 	private GridPane mainPanel;
 	private Pane navbar;
-	private Button addObstacleButton;
 	private BorderPane root;
 
 	private static Map<String, Map<String, Integer>> parameters;
 	private Set<Obstacle> obstacles;
 
 	private Circle activeRobot;
+	private Circle activeControlledR;
 
 	private final Set<Circle> robotViews = new HashSet<>();
+	private final Set<Circle> controlledRobots = new HashSet<>();
 
 	public EnvPresenter() {
 		this.fieldViews = new HashMap<>();
@@ -174,16 +173,82 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 				if (!env.createObstacleAt(position.getCol(), position.getRow())) {
 					// Show error message
 				}
+				Rectangle obstacle = new Rectangle(position.getCol(),position.getRow(),50,50);
+				obstacle.setFill(Color.BLACK);
+				root.getChildren().add(obstacle);
+
 			});
 
 			// Create a container to hold input components
 			VBox container = new VBox(positionLabel, positionInput, confirmButton);
 			Scene scene = new Scene(container);
+			Stage stage = new Stage();
+			stage.setScene(scene);
+			stage.show();
 
 
 		});
 
-		Scene scene = new Scene(root, room.cols()-20, room.rows()-20);
+		Button addRobot = new Button("Add Robot");
+		addRobot.setOnAction(e -> {
+			// Create input components
+			TextField positionInput = new TextField();
+			Label positionLabel = new Label("Enter robot's position as \"x,y\":");
+			Button confirmButton = new Button("Confirm");
+
+			// Add action to confirm button
+			confirmButton.setOnAction(event -> {
+				String robotsPosition = positionInput.getText();
+				String[] positionParameters = robotsPosition.split(",");
+				Position position = new Position(Integer.parseInt(positionParameters[0]), Integer.parseInt(positionParameters[1]));
+				Environment env = (Environment) environment;
+
+
+				ControlledRobot newRobot = ControlledRobot.create(env,position);
+				if(newRobot != null){
+					newRobot.addObserver(this);
+					Circle circle = new Circle(position.getCol(), position.getRow(), 25, Color.RED);
+					circle.setOnMouseClicked(event1 ->{
+						this.activeControlledR = circle;
+						root.getChildren().remove(circle);
+						Circle newcircle = new Circle(circle.getCenterX(), circle.getCenterY(), 25, Color.BLUE);
+						root.getChildren().add(newcircle);
+					});
+					controlledRobots.add(circle);
+					robotViews.add(circle);
+					root.getChildren().add(circle);
+				}
+
+
+			});
+
+
+			// Create a container to hold input components
+			VBox container = new VBox(positionLabel, positionInput, confirmButton);
+			Scene scene = new Scene(container);
+			Stage stage = new Stage();
+			stage.setScene(scene);
+			stage.show();
+
+
+		});
+
+		Button move = new Button("Move");
+
+		move.setOnAction(event ->{
+			Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
+			for(Robot ctrlRobot : environment.getList()){
+
+				if(ctrlRobot.getPosition().equals(pos)){
+					System.out.println("ctrl moved");
+					ctrlRobot.move();
+				}
+			}
+		});
+
+
+
+		Scene scene = new Scene(root, room.cols(), room.rows());
 		root.setId("pane");
 		//Scene scene = new Scene(container);
 
@@ -194,13 +259,15 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 
 
 		navbar.getChildren().add(addObstacle);
+		navbar.getChildren().add(addRobot);
+		navbar.getChildren().add(move);
+
 
 		// Add other buttons to the navbar and set their event handlers similarly
 
 		root.setBottom(navbar);
 
 		primaryStage.show();
-
 
 		Thread robotThread = new Thread(() -> {
 			while (true) {
@@ -220,7 +287,7 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 				});
 
 				try {
-					Thread.sleep(100); // Adjust the delay between movements
+					Thread.sleep(300); // Adjust the delay between movements
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -500,24 +567,6 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
         }
         return false;
     }
-
-
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
 
 
 }

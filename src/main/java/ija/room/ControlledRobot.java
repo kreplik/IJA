@@ -31,7 +31,7 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
             ControlledRobot robot = new ControlledRobot(env, pos);
 
             if (env.addRobot(robot)) {
-    												robot.notifyObservers();
+    												//robot.notifyObservers();
                 notified = observers.size();
                 return robot; 
             }
