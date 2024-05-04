@@ -64,7 +64,7 @@ public class Room implements Environment {
     @Override
     public boolean obstacleAt(Position p) {
         for (Obstacle obstacle : obstacles) {
-            if (obstacle.getPosition().equals(p)) {
+            if (!obstacle.getPosition().validPosition(p)) {
                 return true;
             }
         }

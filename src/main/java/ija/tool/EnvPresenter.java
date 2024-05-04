@@ -22,11 +22,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -36,6 +39,7 @@ import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 
 public class EnvPresenter extends Application implements Observable.Observer,MouseListener {
@@ -50,9 +54,14 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 	private GridPane mainPanel;
 	private Pane navbar;
 	private Button addObstacleButton;
+	private BorderPane root;
 
 	private static Map<String, Map<String, Integer>> parameters;
 	private Set<Obstacle> obstacles;
+
+	private Circle activeRobot;
+
+	private final Set<Circle> robotViews = new HashSet<>();
 
 	public EnvPresenter() {
 		this.fieldViews = new HashMap<>();
@@ -81,24 +90,7 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 		this.environment = room;
 		this.obstacles = room.getObstacles();
 
-		primaryStage.setTitle("IJA GAME");
 
-		BorderPane root = new BorderPane();
-		root.setStyle("-fx-background-color: #192a40;");
-		primaryStage.setScene(new Scene(root, room.cols(), room.rows()));
-
-		GridPane mainPanel = new GridPane();
-		root.setCenter(mainPanel);
-
-		try {
-			Image backgroundImage = new Image("/data/background.jpg");
-			BackgroundImage background = new BackgroundImage(backgroundImage,
-				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-				BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-			root.setBackground(new Background(background));
-		}
-		catch (Exception ignored)	{
-		}
 
 
 		int autoRobotsIndex = 0;
@@ -122,6 +114,24 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 			}
 		}
 
+		primaryStage.setTitle("IJA GAME");
+
+		root = new BorderPane();
+		//root.setStyle("-fx-background-color: #192a40;");
+
+		Image img = new Image("file:data/background.jpg");
+		ImageView imageView = new ImageView(img);
+		imageView.setFitHeight(800);
+		imageView.setFitWidth(800);
+		//Adding the imageView to the stackPane
+		root.getChildren().add(imageView);
+
+
+		GridPane mainPanel = new GridPane();
+		root.setCenter(mainPanel);
+
+
+
 		for(Obstacle obstacle : this.obstacles){
 			Position pos = new Position(obstacle.getPosition().getCol(),obstacle.getPosition().getRow());
 			Rectangle rectangle = new Rectangle(pos.getCol(),pos.getRow(),50,50);
@@ -131,10 +141,17 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 
 		for(Robot robot : this.autorobots){
 			Position pos = new Position(robot.getPosition().getCol(),robot.getPosition().getRow());
-			Circle circle = new Circle(pos.getCol(),pos.getRow(),25,Color.RED);
-
+			Circle circle = new Circle(pos.getCol(),pos.getRow(),25,Color.YELLOW);
+			robot.addObserver(this);
+			robotViews.add(circle);
 			root.getChildren().add(circle);
 		}
+
+		Circle robot = new Circle(50, 50, 10, Color.YELLOW);
+		root.getChildren().add(robot);
+
+
+		//moveRobot(200, 200,robot);
 
 		FlowPane navbar = new FlowPane();
 		navbar.setPadding(new Insets(10,10,10,10));
@@ -160,12 +177,19 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 
 			// Create a container to hold input components
 			VBox container = new VBox(positionLabel, positionInput, confirmButton);
+			Scene scene = new Scene(container);
 
-			// Create a new stage for the container and show it
-			Stage stage = new Stage();
-			stage.setScene(new Scene(container));
-			stage.show();
+
 		});
+
+		Scene scene = new Scene(root, room.cols(), room.rows());
+		root.setId("pane");
+		//Scene scene = new Scene(container);
+
+
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		primaryStage.setScene(scene);
 
 
 		navbar.getChildren().add(addObstacle);
@@ -175,47 +199,90 @@ public class EnvPresenter extends Application implements Observable.Observer,Mou
 		root.setBottom(navbar);
 
 		primaryStage.show();
+
+
+		Thread robotThread = new Thread(() -> {
+			while (true) {
+				// Move the robot
+				Platform.runLater(() -> {
+
+						for(Robot autorobot : this.autorobots) {
+							if (!autorobot.canMove()) {
+								autorobot.turn();
+								System.out.println(autorobot+" turned");
+							}
+							if(autorobot.move()) {
+								System.out.println(autorobot + " moved");
+							}
+						}
+
+				});
+
+				try {
+					Thread.sleep(100); // Adjust the delay between movements
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		robotThread.setDaemon(true); // Mark the thread as a daemon to stop it when the application exits
+		robotThread.start();
+
+
+	}
+
+	private void moveRobot(double newX, double newY) {
+		// Create a translate transition
+		TranslateTransition transition = new TranslateTransition(Duration.seconds(1), this.activeRobot);
+		transition.setToX(newX - this.activeRobot.getCenterX());
+		transition.setToY(newY - this.activeRobot.getCenterY());
+
+		// Set up event handler to update robot position after animation completes
+		transition.setOnFinished(event -> {
+			this.activeRobot.setTranslateX(0);
+			this.activeRobot.setTranslateY(0);
+			this.activeRobot.setCenterX(newX);
+			this.activeRobot.setCenterY(newY);
+		});
+
+		robotViews.remove(this.activeRobot);
+		root.getChildren().remove(this.activeRobot);
+		Circle newRobot = new Circle(newX,newY,25,Color.YELLOW);
+		robotViews.add(newRobot);
+		root.getChildren().add(newRobot);
+
+		// Play the animation
+		transition.play();
 	}
 
 
 	@Override
 	public void update(Observable o) {
 
-		/*
+
 	    if (o instanceof ToolRobot) {
-	        for (int i = 0; i < environment.rows(); i++) {
-	            for (int j = 0; j < environment.cols(); j++) {
-	                Position newPosition = new Position(j, i);
-	                FieldView fieldView = fieldAt(newPosition);
-	                boolean foundRobot = false;
-	                int color = 1; 
 
-	                for (ToolRobot toolRobot : this.robots) {
-	                    if (toolRobot.getPosition().equals(newPosition)) {
-	                        int angle = toolRobot.angle();
+						Position PrevPos = ((ToolRobot) o).getPrevPosition();
+						Position newPos = ((ToolRobot) o).getPosition();
 
-	                        if (this.controlledRobot != null && this.controlledRobot.equals(toolRobot)) {
-	                            color = 2; 
-	                        }
-	                        else if (isRobotInAutoRobots(toolRobot, this.autorobots)) {
-	                            color = 0;
-	                        }
-	                        fieldView.setHasRobot(environment.robotAt(newPosition), angle, color);
-	                        foundRobot = true;
-	                        break; 
-	                    }
-	                }
+						this.activeRobot = getRobotsView(PrevPos);
+						moveRobot(newPos.getCol(),newPos.getRow());
 
-	                if (!foundRobot) {
-	                    fieldView.setHasRobot(false, 0, color); 
-	                }
-
-	                fieldView.setHasObstacle(environment.obstacleAt(newPosition));
-	            }
-	        }
 	    }
-	    */
-		 return;
+
+	}
+
+	public Circle getRobotsView(Position pos)
+	{
+		for(Circle circle : robotViews) {
+			Position prevPos = new Position((int) circle.getCenterX(), (int) circle.getCenterY());
+			System.out.println("OLD POSITION: "+ prevPos + "NEW: " + pos);
+			if(prevPos.equals(pos)){
+
+				return circle;
+			}
+		}
+		return null;
 	}
 
 /*

@@ -10,11 +10,11 @@ public class Position {
     }
 
     public int getRow() {
-        return row;
+        return this.row;
     }
 
     public int getCol() {
-        return col;
+        return this.col;
     }
 
     @Override
@@ -22,8 +22,9 @@ public class Position {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Position position = (Position) o;
-        return row == position.row && col == position.col;
+        return this.row == position.row && this.col == position.col;
     }
+
 
 
     @Override

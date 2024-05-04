@@ -8,16 +8,15 @@ import ija.tool.EnvPresenter;
 import ija.tool.common.Position;
 import javafx.application.Application;
 
-import java.util.List;
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Main {
 
 	private static Map<String, Map<String, Integer>> parameters;
+	private Set<Robot> autorobots = new HashSet<>();
 
 	public Map<String, Map<String, Integer>> getParams(){
 		return parameters;
@@ -26,6 +25,7 @@ public class Main {
 	public static void main(String... args) {
 
 		Application.launch(EnvPresenter.class);
+
 
 	}
 

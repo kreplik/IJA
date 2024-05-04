@@ -3,23 +3,16 @@ width=600
 height=600
 
 [Robot1]
-positionX=220
-positionY=340
+positionX=120
+positionY=520
 
-[Robot2]
-positionX=50
-positionY=60
-
-[Robot3]
-positionX=100
-positionY=100
 
 [Obstacle1]
 positionX=500
 positionY=500
 
 [Obstacle2]
-positionX=200
+positionX=120
 positionY=400
 
 [Obstacle3]
@@ -29,5 +22,21 @@ positionY=400
 [Obstacle4]
 positionX=400
 positionY=400
+
+[Obstacle5]
+positionX=450
+positionY=450
+
+[Obstacle6]
+positionX=500
+positionY=200
+
+[Obstacle7]
+positionX=240
+positionY=290
+
+[Obstacle8]
+positionX=180
+positionY=200
 
 

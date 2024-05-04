@@ -12,6 +12,7 @@ import ija.tool.common.AbstractObservableRobot;
 public class ControlledRobot extends AbstractObservableRobot implements Robot{
     private Environment environment;
     private Position position;
+				private Position prevPosition;
     private int angle;
     private static List<Observer> observers = new ArrayList<>();
     private static int notified = 0;
@@ -53,40 +54,41 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
         int newX = position.getCol();
         int newY = position.getRow();
         switch (angle) {
-            case 0:
-                newY--;
-                break;
-            case 45:
-                newY--;
-                newX++;
-                break;
-            case 90:
-                newX++;
-                break;
-            case 135:
-                newX++;
-                newY++;
-                break;
-            case 180:
-                newY++;
-                break;
-            case 225:
-                newY++;
-                newX--;
-                break;
-            case 270:
-                newX--;
-                break;
-            case 315:
-                newX--;
-                newY--;
-                break;
+									case 0:
+										newY -=10;
+										break;
+									case 45:
+										newY-=10;
+										newX+=10;
+										break;
+									case 90:
+										newX+=10;
+										break;
+									case 135:
+										newX+=10;
+										newY+=10;
+										break;
+									case 180:
+										newY+=10;
+										break;
+									case 225:
+										newY+=10;
+										newX-=10;
+										break;
+									case 270:
+										newX-=10;
+										break;
+									case 315:
+										newX-=10;
+										newY-=10;
+										break;
             default:
                 return false;
         }
     
         if (environment.containsPosition(new Position(newX, newY)) && !environment.obstacleAt(new Position(newX, newY)) && !environment.robotAt(new Position(newX, newY))) {
-            this.position = new Position(newX, newY);
+            this.prevPosition = this.position;
+												this.position = new Position(newX, newY);
             this.notifyObservers();
 
             return true; 
@@ -100,32 +102,32 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
         int newY = position.getRow();
         switch (angle) {
             case 0:
-                newY--;
+                newY -=10;
                 break;
             case 45:
-                newY--;
-                newX++;
+                newY-=10;
+                newX+=10;
                 break;
             case 90:
-                newX++;
+                newX+=10;
                 break;
             case 135:
-                newX++;
-                newY++;
+                newX+=10;
+                newY+=10;
                 break;
             case 180:
-                newY++;
+                newY+=10;
                 break;
             case 225:
-                newY++;
-                newX--;
+                newY+=10;
+                newX-=10;
                 break;
             case 270:
-                newX--;
+                newX-=10;
                 break;
             case 315:
-                newX--;
-                newY--;
+                newX-=10;
+                newY-=10;
                 break;
             default:
                 return false; 
@@ -144,13 +146,18 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
     @Override
     public void turn() {
         angle = (angle + 90) % 360;
-        this.notifyObservers();
+        //this.notifyObservers();
     }
 
     @Override
     public Position getPosition() {
         return this.position;
     }
+
+				@Override
+				public Position getPrevPosition(){
+					return this.prevPosition;
+				}
 
     @Override
     public int angle() {

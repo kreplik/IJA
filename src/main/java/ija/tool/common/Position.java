@@ -26,6 +26,28 @@ public class Position {
         return this.row == position.row && this.col == position.col;
     }
 
+	public boolean validPosition(Position other) {
+		int dx = this.col - other.col;
+		int dy = this.row - other.row;
+		int distanceSquared = dx * dx + dy * dy;
+		int maxDistanceSquared = 25 * 25;
+
+		int dx2 = this.col - other.col;
+		int dy2 = this.row + 50 - other.row;
+		int distanceSquared2 = dx2 * dx2 + dy2 * dy2;
+
+		int dx3 = this.col + 50 - other.col;
+		int dy3 = this.row - other.row;
+		int distanceSquared3 = dx3 * dx3 + dy3 * dy3;
+
+		int dx4 = this.col + 50 - other.col;
+		int dy4 = this.row + 50 - other.row;
+		int distanceSquared4 = dx4 * dx4 + dy4 * dy4;
+
+		int min =  Math.min(Math.min(distanceSquared,Math.min(distanceSquared2,distanceSquared3)),distanceSquared4);
+		return min > maxDistanceSquared;
+	}
+
 
     @Override
     public int hashCode() {
@@ -36,6 +58,5 @@ public class Position {
     public String toString() {
         return "[" + row + ", " + col + "]";
     }
-
 
 }
