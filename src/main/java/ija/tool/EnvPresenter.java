@@ -209,7 +209,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				Position position = new Position(Integer.parseInt(positionParameters[0]), Integer.parseInt(positionParameters[1]));
 				Environment env = (Environment) environment;
 				if (!env.createObstacleAt(position.getCol(), position.getRow())) {
-					showAlert("No robot selected to move.");
+					showAlert("Can not create obstacle at this position");
 				}else{
 					Rectangle obstacle = new Rectangle(position.getCol(),position.getRow(),50,50);
 					obstacle.setFill(Color.BLACK);
@@ -270,10 +270,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		move.setStyle(actionButtonStyle);
 
 		Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(20), e -> {
-		    if (activeControlledR == null) {
-		        showAlert("No robot selected to move.");
-		        return;
-		    }
+
 		    Position pos = new Position((int) activeControlledR.getCenterX(), (int) activeControlledR.getCenterY());
 		    int count = 0;
 		    for (Robot ctrlRobot : environment.getList()) {
@@ -291,7 +288,14 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		}));
 		moveTimeline.setCycleCount(Timeline.INDEFINITE);
 
-		move.setOnMousePressed(event -> moveTimeline.play());
+		move.setOnMousePressed(event ->
+			{
+				if(this.activeControlledR == null){
+					showAlert("No robot selected to move.");
+					return;
+				}
+				moveTimeline.play();
+			});
 		move.setOnMouseReleased(event -> moveTimeline.stop());
 
 		Button turnR = new Button("Right");

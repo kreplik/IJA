@@ -6,9 +6,8 @@ import java.util.List;
 import ija.common.Environment;
 import ija.tool.common.Position;
 import ija.common.Robot;
-import ija.tool.common.AbstractObservableRobot;
 
-public class ControlledRobot extends AbstractObservableRobot implements Robot{
+public class ControlledRobot implements Robot{
     private Environment environment;
     private Position position;
 	private Position prevPosition;

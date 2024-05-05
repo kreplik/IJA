@@ -10,7 +10,7 @@
   * Dálkově ovladaný
 
 ## Spuštění
-1. `mvn clean compile` (mvn clean install)
+1. `mvn clean compile`
 2. `mvn clean javafx:run`
 
 ## Dokumentace
