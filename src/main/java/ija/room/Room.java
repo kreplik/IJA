@@ -49,15 +49,6 @@ public class Room implements Environment {
       return false;
     }
 
-    @Override
-    public boolean obstacleAt(int x, int y) {
-        for (Obstacle obstacle : obstacles) {
-            if (obstacle.getPosition().getRow() == y && obstacle.getPosition().getCol() == x) {
-                return true;
-            }
-        }
-        return false;
-    }
     
     @Override
     public boolean obstacleAt(Position p,int angle) {
