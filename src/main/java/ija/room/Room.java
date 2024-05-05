@@ -26,14 +26,26 @@ public class Room implements Environment {
         this.autoRobots = new ArrayList<>();
     }
 
-    public static Room create(int width, int height) {
+	/**
+		* Creates room
+		* @param width Room's width
+		* @param height Room's height
+		* @return Room
+		*/
+	public static Room create(int width, int height) {
         if (width <= 0 || height <= 0) {
             throw new IllegalArgumentException("Room dimensions must be greater than zero.");
         }
         return new Room(width, height);
     }
 
-    @Override
+	/**
+		* Creates obstacle at selected position
+		* @param x Column
+		* @param y Row
+		* @return Result of creation
+		*/
+	@Override
     public boolean createObstacleAt(int x, int y) {
         if (x >= 0 && x < width && y >= 0 && y <= height) {
             Position obstaclePosition = new Position(x, y);
@@ -49,8 +61,13 @@ public class Room implements Environment {
       return false;
     }
 
-    
-    @Override
+	/**
+		* Checks if there is obstacle near selected position
+		* @param p Selected position
+		* @param angle Robot's angle
+		* @return True, if there is an obstacle
+		*/
+	@Override
     public boolean obstacleAt(Position p,int angle) {
         for (Obstacle obstacle : obstacles) {
             if (!obstacle.getPosition().validPosition(p,angle)) {
@@ -61,7 +78,12 @@ public class Room implements Environment {
     }
 
 
-    @Override
+	/**
+		* Add robot to the list
+		* @param robot Robot to be added
+		* @return Result of adding robot to the list
+		*/
+	@Override
     public boolean addRobot(Robot robot) {
         if (robot != null && !this.robots.contains(robot) && !obstacleAt(robot.getPosition(),999) && containsPosition(robot.getPosition())) {
             return this.robots.add(robot);
@@ -70,13 +92,23 @@ public class Room implements Environment {
     }
 
 
-
-    @Override
+	/**
+		* Checks if the position is within room's parameters
+		* @param pos Position
+		* @return Result of validation
+		*/
+	@Override
     public boolean containsPosition(Position pos) {
         return pos.getRow() >= 25 && pos.getRow() < height - 70 && pos.getCol() >= 25 && pos.getCol() < width - 25;
     }
 
-    @Override
+	/**
+		* Checks if there is a robot near specified position
+		* @param pos Specified position
+		* @param sender Robot that checks this position
+		* @return Result of validation
+		*/
+	@Override
     public boolean robotAt(Position pos, ToolRobot sender) {
         final double radius = 25;
         for (Robot robot : this.robots) {
@@ -87,28 +119,43 @@ public class Room implements Environment {
         return false;
     }
 
-    @Override
+	/**
+		* @return Room's height
+		*/
+	@Override
     public int rows(){
         return this.height;
     }
 
-    @Override
+	/**
+		* @return Room's width
+		*/
+	@Override
     public int cols(){
         return this.width;
     }
 
-    @Override
+	/**
+		* @return List of robots
+		*/
+	@Override
     public List<ToolRobot> robots() {
         List<ToolRobot> robotList = new ArrayList<>();
         robotList.addAll(this.robots);
         return robotList;
     }
 
+				/**
+				* @return Set of Robots
+				 */
     @Override
     public Set<Robot> getList() {
         return this.robots;
     }
 
+	/**
+		* @return Concrete obstacle
+		*/
 	@Override
 	public Set<Obstacle> getObstacles() {
         return this.obstacles;
