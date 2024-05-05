@@ -8,111 +8,130 @@ Obstacle has been created on position: <500,500>
 Obstacle has been created on position: <180,200>
 Obstacle has been created on position: <240,290>
 Autonomous Robot has been created on position: <320,500>
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d turned
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b turned
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b turned
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b turned
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d turned
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d turned
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b turned
-ija.room.ControlledRobot@fb5ba7d moved
-ija.room.ControlledRobot@1667c6b moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 turned
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 turned
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 turned
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 turned
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 turned
+ija.room.ControlledRobot@7cfb27b5 moved
+Controlled robot turned right.
+Controlled robot turned right.
+ija.room.ControlledRobot@133522b0 turned
+ija.room.ControlledRobot@7cfb27b5 moved
+ija.room.ControlledRobot@133522b0 moved
+ija.room.ControlledRobot@7cfb27b5 moved
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot turned right.
+Controlled robot turned right.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot turned left.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
+Controlled robot moved forward.
