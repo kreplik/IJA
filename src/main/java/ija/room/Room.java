@@ -44,9 +44,7 @@ public class Room implements Environment {
 					return false;
 				}
 			}
-			System.out.println(obstacle + " has been created on position: <" + obstacle.getPosition().getCol() + "," + obstacle.getPosition().getRow() + ">");
-
-									return obstacles.add(obstacle);
+			return obstacles.add(obstacle);
         }
       return false;
     }

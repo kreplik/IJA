@@ -3,7 +3,7 @@ package ija.tool;
 import ija.common.Environment;
 import ija.common.Obstacle;
 import ija.common.Robot;
-import ija.example.Main;
+import ija.game.Main;
 import ija.room.ControlledRobot;
 import ija.room.Room;
 import ija.tool.common.Observable;
@@ -13,8 +13,11 @@ import ija.tool.view.FieldView;
 import ija.tool.common.Position;
 import ija.tool.view.RobotView;
 
-
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.io.IOException;
+import java.io.File;
+
 import java.util.*;
 import javafx.geometry.Pos;
 
@@ -56,7 +59,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	private Map<Circle, Circle> directionIndicators = new HashMap<>();
 	private Map<Circle, Robot> robotMap = new HashMap<>();
 	boolean pause;
-
+	private PrintWriter printWriter;
 
 
 	public EnvPresenter() {
@@ -71,7 +74,16 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception{
-
+		try {
+    	    File logFile = new File("data/logging.txt");
+    	    if (logFile.exists()) {
+    	        logFile.delete();  // Ensures that the file is fresh each run
+    	    }
+    	    // Ensure the PrintWriter flushes automatically after each println
+    	    printWriter = new PrintWriter(new FileWriter(logFile), true);
+    	} catch (IOException e) {
+    	    e.printStackTrace();
+    	}
 
 
 		Main.ParametersLoader loader = new Main.ParametersLoader("data/parameters.txt");
@@ -104,7 +116,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 				room.createObstacleAt(entry.getValue().get("positionX"), entry.getValue().get("positionY"));
 
-				System.out.println("Obstacle has been created on position: <" +  entry.getValue().get("positionX") + "," + entry.getValue().get("positionY") + ">");
+				printWriter.println("Obstacle has been created on position: <" +  entry.getValue().get("positionX") + "," + entry.getValue().get("positionY") + ">"); 
 			}
 
 			if(entry.getKey().contains("Robot")){
@@ -113,8 +125,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 				this.autorobots.add(ControlledRobot.create(room, p1));
 
-
-				System.out.println("Autonomous Robot has been created on position: <" +  entry.getValue().get("positionX") + "," + entry.getValue().get("positionY") + ">");
+				printWriter.println("Autonomous Robot has been created on position: <" +  entry.getValue().get("positionX") + "," + entry.getValue().get("positionY") + ">");
 			}
 		}
 
@@ -168,8 +179,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		}
 
 
-
-		System.out.println(robotViews);
+		//printWriter.println(robotViews);
 
 		//moveRobot(200, 200,robot);
 
@@ -276,9 +286,9 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 				if(ctrlRobot.getPosition().equals(pos)){
 					if(ctrlRobot.canMove()){
-						System.out.println("ctrl moved");
+						printWriter.println("Controled robot moved forward");
 					}else{
-						System.out.println("ctrl is blocked");
+						printWriter.println("Controled robot is blocked");
 					}
 					ctrlRobot.move();
 				}
@@ -293,7 +303,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
 				if(robot.getPosition().equals(pos)){
 					robot.turn(1);
-					System.out.println("ctrl turned right");
+					printWriter.println("Controled robot turned right");
 				}
 			}
 		});
@@ -306,7 +316,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
 				if(robot.getPosition().equals(pos)){
 					robot.turn(7);
-					System.out.println("ctrl turned left");
+					printWriter.println("Controled robot turned left");
 				}
 			}
 		});
@@ -361,11 +371,11 @@ public class EnvPresenter extends Application implements Observable.Observer {
 								continue;
 							}else if (!autorobot.canMove()) {
 								autorobot.turn();
-								System.out.println(autorobot+" turned");
+								printWriter.println(autorobot + "tuned");
 							}
 							else {
 								autorobot.move();
-								System.out.println(autorobot + " moved");
+								printWriter.println(autorobot + "moved");
 							}
 						}
 
@@ -422,7 +432,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 	public void MoveRight(){
 		if(this.controlledRobot == null){
-			System.out.println("You havent picked a robot");
 			return;
 		}
 		this.controlledRobot.turn(1);
@@ -430,7 +439,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
     public void MoveLeft(){
 		if(this.controlledRobot == null){
-			System.out.println("You havent picked a robot");
 			return;
 		}
 		this.controlledRobot.turn(7);
@@ -438,7 +446,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
     public void MoveForward(){
 		if(this.controlledRobot == null){
-			System.out.println("You havent picked a robot");
 			return;
 		}
 		this.controlledRobot.move();
@@ -454,7 +461,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 			if(robot.getPosition().equals(position) && !isRobotInAutoRobots(robot, this.autorobots))
 			{
 				this.controlledRobot = robot;
-				System.out.println("Controlled Robot has been choosed");
+				printWriter.println("Controlled Robot has been choosed");
 			}
 		}
 

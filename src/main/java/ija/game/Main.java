@@ -1,4 +1,4 @@
-package ija.example;
+package ija.game;
 
 import ija.common.Environment;
 import ija.common.Robot;
