@@ -1,6 +1,6 @@
 [GameField]
-width=600
-height=600
+width=700
+height=700
 
 [Robot1]
 positionX=120

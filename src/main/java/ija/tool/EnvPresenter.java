@@ -54,6 +54,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	private final Set<Circle> controlledRobots = new HashSet<>();
 	private Map<Circle, Circle> directionIndicators = new HashMap<>();
 	private Map<Circle, Robot> robotMap = new HashMap<>();
+	boolean pause;
 
 
 
@@ -61,6 +62,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		this.fieldViews = new HashMap<>();
 		this.robotViewMap = new HashMap<>();
 		this.autorobots = new HashSet<>();
+		this.pause = false;
 	}
 
 
@@ -273,6 +275,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
 				if(robot.getPosition().equals(pos)){
 					robot.turn(1);
+					System.out.println("ctrl turned right");
 				}
 			}
 		});
@@ -285,8 +288,18 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
 				if(robot.getPosition().equals(pos)){
 					robot.turn(7);
+					System.out.println("ctrl turned left");
 				}
 			}
+		});
+
+		Button pauseButton = new Button("Pause");
+		// Initial color setting based on initial pause state
+		updateButtonColor(pauseButton, this.pause);
+
+		pauseButton.setOnAction(event -> {
+		    this.pause = !this.pause;  // Toggle the pause state
+		    updateButtonColor(pauseButton, this.pause);  // Update button color based on the new state
 		});
 
 
@@ -308,7 +321,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		navbar.getChildren().add(turnL);
 		navbar.getChildren().add(move);
 		navbar.getChildren().add(turnR);
-
+		navbar.getChildren().add(pauseButton);
 		navbar.setHgap(30);
 		navbar.getChildren().add(addRobot);
 
@@ -326,11 +339,14 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				Platform.runLater(() -> {
 
 						for(Robot autorobot : this.autorobots) {
-							if (!autorobot.canMove()) {
+							if(this.pause){
+								continue;
+							}else if (!autorobot.canMove()) {
 								autorobot.turn();
 								System.out.println(autorobot+" turned");
 							}
-							if(autorobot.move()) {
+							else {
+								autorobot.move();
 								System.out.println(autorobot + " moved");
 							}
 						}
@@ -444,22 +460,13 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	        // Assuming `robotMap` maps each Circle to its corresponding Robot object
 	        Robot robot = robotMap.get(robotBody);
 	        if (robot != null) {
-	            // Convert angle to radians; adjust for GUI coordinate system
-	            double angleInRadians = Math.toRadians(robot.angle()); // Convert angle for correct orientation
-
-	            // Adjusting for the described directions:
-	            // 0 degrees is up (-sin), 90 degrees is right (cos), 180 degrees is down (+sin), 270 degrees is left (-cos)
-	            double offsetX = (25 - 5) * Math.sin(angleInRadians);  // sin for horizontal offset
-	            double offsetY = -(25 - 5) * Math.cos(angleInRadians); // -cos for vertical offset (GUI has inverted y-axis)
 
 	            Circle directionIndicator = directionIndicators.get(robotBody);
 	            if (directionIndicator != null) {
-	                directionIndicator.setCenterX(newX + offsetX);
-	                directionIndicator.setCenterY(newY + offsetY);
+	                updateDirectionIndicator(directionIndicator,robot.angle(),robot.getPosition());
+
 	            }
 	        }
-	    } else {
-	        System.out.println("Robot body cannot be null");
 	    }
 	}
 
@@ -470,6 +477,14 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	    double offsetY = -radius * Math.cos(angleInRadians); // Adjusted for GUI y-axis direction
 	    indicator.setCenterX(position.getCol() + offsetX);
 	    indicator.setCenterY(position.getRow() + offsetY);
+	}
+
+	private void updateButtonColor(Button button, boolean isPaused) {
+	    if (isPaused) {
+	        button.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+	    } else {
+	        button.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+	    }
 	}
 
 }
