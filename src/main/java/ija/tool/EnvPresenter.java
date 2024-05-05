@@ -17,7 +17,8 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.File;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import java.util.*;
 import javafx.geometry.Pos;
 
@@ -280,46 +281,58 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 		Button move = new Button("Move");
 		move.setStyle(actionButtonStyle);
-		move.setOnAction(event ->{
-			Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
-			for(Robot ctrlRobot : environment.getList()){
-
-				if(ctrlRobot.getPosition().equals(pos)){
-					if(ctrlRobot.canMove()){
-						printWriter.println("Controlled robot moved forward");
-					}else{
-						printWriter.println("Controlled robot is blocked");
-					}
-					ctrlRobot.move();
-				}
-			}
+		move.setOnAction(event -> {
+		    if (activeControlledR == null) {
+		        showAlert("No robot selected to move.");
+		        return;
+		    }
+		    Position pos = new Position((int) activeControlledR.getCenterX(), (int) activeControlledR.getCenterY());
+		    for (Robot ctrlRobot : environment.getList()) {
+		        if (ctrlRobot.getPosition().equals(pos)) {
+		            if (ctrlRobot.canMove()) {
+		                printWriter.println("Controlled robot moved forward.");
+		            } else {
+		                printWriter.println("Controlled robot is blocked.");
+		            }
+		            ctrlRobot.move();
+		        }
+		    }
 		});
 
 		Button turnR = new Button("Right");
 		turnR.setStyle(actionButtonStyle);
-		turnR.setOnAction(event ->{
-			Set<Robot> robotList = environment.getList();
-			for(Robot robot : robotList){
-				Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
-				if(robot.getPosition().equals(pos)){
-					robot.turn(1);
-					printWriter.println("Controlled robot turned right");
-				}
-			}
+		turnR.setOnAction(event -> {
+		    if (activeControlledR == null) {
+		        showAlert("No robot selected to turn right.");
+		        return;
+		    }
+		    Position pos = new Position((int) activeControlledR.getCenterX(), (int) activeControlledR.getCenterY());
+		    Set<Robot> robotList = environment.getList();
+		    for (Robot robot : robotList) {
+		        if (robot.getPosition().equals(pos)) {
+		            robot.turn(1);
+		            printWriter.println("Controlled robot turned right.");
+		        }
+		    }
 		});
 
 		Button turnL = new Button("Left");
 		turnL.setStyle(actionButtonStyle);
-		turnL.setOnAction(event ->{
-			Set<Robot> robotList = environment.getList();
-			for(Robot robot : robotList){
-				Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
-				if(robot.getPosition().equals(pos)){
-					robot.turn(7);
-					printWriter.println("Controlled robot turned left");
-				}
-			}
+		turnL.setOnAction(event -> {
+		    if (activeControlledR == null) {
+		        showAlert("No robot selected to turn left.");
+		        return;
+		    }
+		    Position pos = new Position((int) activeControlledR.getCenterX(), (int) activeControlledR.getCenterY());
+		    Set<Robot> robotList = environment.getList();
+		    for (Robot robot : robotList) {
+		        if (robot.getPosition().equals(pos)) {
+		            robot.turn(7);
+		            printWriter.println("Controlled robot turned left.");
+		        }
+		    }
 		});
+
 
 		Button pauseButton = new Button("Pause");
 		// Initial color setting based on initial pause state
@@ -523,6 +536,14 @@ public class EnvPresenter extends Application implements Observable.Observer {
     	                           "-fx-font-size: 14px;");
 	    }
 	}
+
+	private void showAlert(String message) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(null); // No header
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
 }
 
