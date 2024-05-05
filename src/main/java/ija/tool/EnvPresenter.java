@@ -18,6 +18,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
@@ -85,7 +86,17 @@ public class EnvPresenter extends Application implements Observable.Observer {
 			e.printStackTrace();
 		}
 
+		root = new BorderPane();
+		root.setStyle("-fx-border-color: black; -fx-border-width: 10 0 0 0;");
+
+		root.setStyle("-fx-border-color: black; -fx-border-width: 0 0 10 0;");
+
+		root.setStyle("-fx-border-color: black; -fx-border-width: 0 10 0 0;");
+
+		root.setStyle("-fx-border-color: black; -fx-border-width: 0 0 0 10;");
+
 		Environment room = Room.create(parameters.get("GameField").get("width"), parameters.get("GameField").get("height"));
+
 		this.robots = room.robots();
 
 		this.environment = room;
@@ -114,7 +125,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 		primaryStage.setTitle("IJA GAME");
 
-		root = new BorderPane();
+
 		//root.setStyle("-fx-background-color: #192a40;");
 
 		Image img = new Image("file:lib/background.jpg");
@@ -134,6 +145,8 @@ public class EnvPresenter extends Application implements Observable.Observer {
 			Position pos = new Position(obstacle.getPosition().getCol(),obstacle.getPosition().getRow());
 			Rectangle rectangle = new Rectangle(pos.getCol(),pos.getRow(),50,50);
 			rectangle.setFill(Color.BLACK);
+			rectangle.setStyle("-fx-border-color: #1a16af; -fx-border-width: 1; -fx-border-radius: 5;");
+
 			root.getChildren().add(rectangle);
 		}
 
@@ -173,16 +186,19 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		addObstacle.setStyle("-fx-background-color: #000000; -fx-text-fill: white; -fx-font-size: 16px;");
 
 		addObstacle.setOnAction(e -> {
-			Stage stage = new Stage();
-			// Create input components
-			TextField positionInput = new TextField();
-			Label positionLabel = new Label("Enter obstacle position as \"x,y\":");
-			Button confirmButton = new Button("Confirm");
 
-			// Add action to confirm button
-			confirmButton.setOnAction(event -> {
-				String obstaclePosition = positionInput.getText();
-				String[] positionParameters = obstaclePosition.split(",");
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.setTitle("Add obstacle");
+			dialog.setHeaderText("Enter obstacle's position as \"x,y\"");
+			dialog.setContentText("Position:");
+
+
+			// Show the dialog and wait for the user's response
+			Optional<String> result = dialog.showAndWait();
+
+			result.ifPresent(pos -> {
+
+				String[] positionParameters = pos.split(",");
 				Position position = new Position(Integer.parseInt(positionParameters[0]), Integer.parseInt(positionParameters[1]));
 				Environment env = (Environment) environment;
 				if (!env.createObstacleAt(position.getCol(), position.getRow())) {
@@ -190,16 +206,10 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				}
 				Rectangle obstacle = new Rectangle(position.getCol(),position.getRow(),50,50);
 				obstacle.setFill(Color.BLACK);
+				obstacle.setStyle("-fx-border-color: #1a16af; -fx-border-width: 5; -fx-border-radius: 5;");
 				root.getChildren().add(obstacle);
-				stage.close();
+
 			});
-
-			// Create a container to hold input components
-			VBox container = new VBox(positionLabel, positionInput, confirmButton);
-			Scene scene = new Scene(container);
-
-			stage.setScene(scene);
-			stage.show();
 
 
 		});
@@ -208,16 +218,20 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		addRobot.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px;");
 
 		addRobot.setOnAction(e -> {
-			Stage stage = new Stage();
-			// Create input components
-			TextField positionInput = new TextField();
-			Label positionLabel = new Label("Enter robot's position as \"x,y\":");
-			Button confirmButton = new Button("Confirm");
 
-			// Add action to confirm button
-			confirmButton.setOnAction(event -> {
-				String robotsPosition = positionInput.getText();
-				String[] positionParameters = robotsPosition.split(",");
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.setTitle("Add robot");
+			dialog.setHeaderText("Enter robot's position as \"x,y\"");
+			dialog.setContentText("Position:");
+
+
+			// Show the dialog and wait for the user's response
+			Optional<String> result = dialog.showAndWait();
+
+			// Process the user's response
+			result.ifPresent(pos -> {
+
+				String[] positionParameters = pos.split(",");
 				Position position = new Position(Integer.parseInt(positionParameters[0]), Integer.parseInt(positionParameters[1]));
 				Environment env = (Environment) environment;
 
@@ -243,17 +257,9 @@ public class EnvPresenter extends Application implements Observable.Observer {
 					});
 
 				}
-				stage.close();
+
 
 			});
-
-
-			// Create a container to hold input components
-			VBox container = new VBox(positionLabel, positionInput, confirmButton);
-			Scene scene = new Scene(container);
-
-			stage.setScene(scene);
-			stage.show();
 
 
 		});
@@ -306,12 +312,18 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		primaryStage.show();
 		primaryStage.setScene(scene);
 
+		navbar.setHgap(30);
 
 		navbar.getChildren().add(addObstacle);
-		navbar.getChildren().add(addRobot);
+
+		navbar.setHgap(10);
+		navbar.getChildren().add(turnL);
 		navbar.getChildren().add(move);
 		navbar.getChildren().add(turnR);
-		navbar.getChildren().add(turnL);
+
+		navbar.setHgap(30);
+		navbar.getChildren().add(addRobot);
+
 
 
 		// Add other buttons to the navbar and set their event handlers similarly
