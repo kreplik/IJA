@@ -1,7 +1,6 @@
 package ija.common;
 import ija.tool.common.Position;
 
-import javafx.scene.shape.Rectangle;
 
 public class Obstacle {
     private Position position;

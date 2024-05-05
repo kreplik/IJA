@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ija.common.Environment;
-import ija.tool.common.Observable;
 import ija.tool.common.Position;
 import ija.common.Robot;
 import ija.tool.common.AbstractObservableRobot;
@@ -15,7 +14,6 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
 	private Position prevPosition;
     private int angle;
     private static List<Observer> observers = new ArrayList<>();
-    private static int notified = 0;
 
     private ControlledRobot(Environment environment, Position position) {
         this.environment = environment;
@@ -31,7 +29,6 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
             ControlledRobot robot = new ControlledRobot(env, pos);
 
             if (env.addRobot(robot)) {
-                notified = observers.size();
                 return robot; 
             }
         }

@@ -41,7 +41,6 @@ import javafx.scene.shape.Rectangle;
 public class EnvPresenter extends Application implements Observable.Observer {
 	private ToolEnvironment environment;
 	public List<ToolRobot> robots;
-	private ToolRobot controlledRobot;
     public Set<Robot> autorobots;
 
 	private BorderPane root;
