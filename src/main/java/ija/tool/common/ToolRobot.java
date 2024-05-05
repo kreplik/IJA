@@ -1,6 +1,5 @@
 package ija.tool.common;
 
-import java.util.List;
 
 public interface ToolRobot extends Observable{
 	int angle();
@@ -8,8 +7,6 @@ public interface ToolRobot extends Observable{
 
 	Position getPrevPosition();
 	void turn(int num);
-	List<Observable.Observer> getObservers();
-	int notifiedObservers();
 
 	boolean move();
 }

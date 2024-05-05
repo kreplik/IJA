@@ -10,11 +10,6 @@ import java.io.IOException;
 
 public class Main {
 
-	private static Map<String, Map<String, Integer>> parameters;
-
-	public Map<String, Map<String, Integer>> getParams(){
-		return parameters;
-	}
 
 	public static void main(String... args) {
 

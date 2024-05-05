@@ -120,8 +120,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		primaryStage.setTitle("IJA GAME");
 
 
-		//root.setStyle("-fx-background-color: #192a40;");
-
 		Image img = new Image("file:lib/background.jpg");
 		ImageView imageView = new ImageView(img);
 		imageView.setFitHeight(800);

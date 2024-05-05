@@ -11,7 +11,7 @@ public interface ToolEnvironment {
 	boolean obstacleAt(Position p,int angle);
 	boolean robotAt(Position p, ToolRobot sender);
 	List<ToolRobot> robots();
-	List<Robot> autorobots();
+
 	Set<Robot> getList();
 	Set<Obstacle> getObstacles();
 }

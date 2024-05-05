@@ -38,16 +38,6 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
         return null;
     }
 
-    @Override
-    public List<Observable.Observer> getObservers(){
-        return observers;
-    }
-
-    @Override
-    public int notifiedObservers()
-    {
-        return notified;
-    }
 
     @Override
     public boolean move() {
@@ -170,11 +160,6 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
     @Override
     public void addObserver(Observer o) {
         observers.add(o);
-    }
-
-    @Override
-    public void removeObserver(Observer o) {
-        observers.remove(o);
     }
 
     @Override

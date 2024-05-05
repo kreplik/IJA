@@ -114,13 +114,6 @@ public class Room implements Environment {
     }
 
     @Override
-    public List<Robot> autorobots() {
-        List<Robot> robotList = new ArrayList<>();
-        robotList.addAll(this.autoRobots);
-        return robotList;
-    }
-
-    @Override
     public Set<Robot> getList() {
         return this.robots;
     }
