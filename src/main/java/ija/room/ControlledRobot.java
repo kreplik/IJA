@@ -12,7 +12,7 @@ import ija.tool.common.AbstractObservableRobot;
 public class ControlledRobot extends AbstractObservableRobot implements Robot{
     private Environment environment;
     private Position position;
-				private Position prevPosition;
+	private Position prevPosition;
     private int angle;
     private static List<Observer> observers = new ArrayList<>();
     private static int notified = 0;
@@ -20,9 +20,9 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
     private ControlledRobot(Environment environment, Position position) {
         this.environment = environment;
         this.position = position;
-								this.prevPosition = position;
+		this.prevPosition = position;
         this.angle = 0;
-								observers = new ArrayList<>();
+		observers = new ArrayList<>();
   
     }
 
@@ -31,7 +31,6 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
             ControlledRobot robot = new ControlledRobot(env, pos);
 
             if (env.addRobot(robot)) {
-    												//robot.notifyObservers();
                 notified = observers.size();
                 return robot; 
             }
@@ -89,8 +88,8 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
     
         if (environment.containsPosition(new Position(newX, newY)) && !environment.obstacleAt(new Position(newX, newY),this.angle) && !environment.robotAt(new Position(newX, newY),this)) {
             Position old = new Position(this.position.getCol(),this.position.getRow());
-												this.prevPosition = old;
-												this.position = new Position(newX, newY);
+			this.prevPosition = old;
+			this.position = new Position(newX, newY);
             this.notifyObservers();
 
             return true; 

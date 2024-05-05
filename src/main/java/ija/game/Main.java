@@ -1,11 +1,6 @@
 package ija.game;
 
-import ija.common.Environment;
-import ija.common.Robot;
-import ija.room.ControlledRobot;
-import ija.room.Room;
 import ija.tool.EnvPresenter;
-import ija.tool.common.Position;
 import javafx.application.Application;
 
 import java.util.*;
@@ -16,7 +11,6 @@ import java.io.IOException;
 public class Main {
 
 	private static Map<String, Map<String, Integer>> parameters;
-	private Set<Robot> autorobots = new HashSet<>();
 
 	public Map<String, Map<String, Integer>> getParams(){
 		return parameters;
@@ -28,30 +22,6 @@ public class Main {
 
 
 	}
-
-/*
-		int listsize = autorobots.size();
-
-		while (true) {
-			for(int i = 0; i < listsize; i++) {
-				if (!autorobots.get(i).canMove()) {
-					autorobots.get(i).turn();
-					System.out.println("Autonomous Robot: " + i + " turned");
-				}
-				autorobots.get(i).move();
-				System.out.println("Autonomous Robot: " + i + " moved");
-			}
-			sleep(1000);
-		}
-	}
-
-	public static void sleep(int ms) {
-		try {
-			Thread.sleep(ms);
-		} catch (InterruptedException ignored) {
-
-		}
-		*/
 
 	public static class ParametersLoader {
 		private final String filePath;

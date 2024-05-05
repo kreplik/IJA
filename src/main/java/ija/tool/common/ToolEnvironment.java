@@ -6,13 +6,12 @@ import java.util.List;
 import java.util.Set;
 
 public interface ToolEnvironment {
-				int rows();
-				int cols();
-				boolean obstacleAt(Position p,int angle);
-
-				boolean robotAt(Position p, ToolRobot sender);
-				List<ToolRobot> robots();
-				List<Robot> autorobots();
-				Set<Robot> getList();
-				Set<Obstacle> getObstacles();
+	int rows();
+	int cols();
+	boolean obstacleAt(Position p,int angle);
+	boolean robotAt(Position p, ToolRobot sender);
+	List<ToolRobot> robots();
+	List<Robot> autorobots();
+	Set<Robot> getList();
+	Set<Obstacle> getObstacles();
 }

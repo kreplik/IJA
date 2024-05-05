@@ -87,7 +87,7 @@ public class Room implements Environment {
 
     @Override
     public boolean robotAt(Position pos, ToolRobot sender) {
-        final double radius = 25; // Radius of the robot
+        final double radius = 25;
         for (Robot robot : this.robots) {
             if (robot != sender && robot.getPosition().isNear(pos, radius)) {
                 return true;
@@ -125,8 +125,10 @@ public class Room implements Environment {
         return this.robots;
     }
 
-				@Override
-				public Set<Obstacle> getObstacles(){return this.obstacles;}
+	@Override
+	public Set<Obstacle> getObstacles() {
+        return this.obstacles;
+    }
 
 }
 

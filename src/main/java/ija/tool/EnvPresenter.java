@@ -9,9 +9,7 @@ import ija.room.Room;
 import ija.tool.common.Observable;
 import ija.tool.common.ToolEnvironment;
 import ija.tool.common.ToolRobot;
-import ija.tool.view.FieldView;
 import ija.tool.common.Position;
-import ija.tool.view.RobotView;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -25,7 +23,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.input.MouseEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -43,9 +40,6 @@ import javafx.scene.shape.Rectangle;
 
 public class EnvPresenter extends Application implements Observable.Observer {
 	private ToolEnvironment environment;
-	public Map<Position, FieldView> fieldViews;
-
-	public Map<Position, RobotView> robotViewMap;
 	public List<ToolRobot> robots;
 	private ToolRobot controlledRobot;
     public Set<Robot> autorobots;
@@ -66,8 +60,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 
 	public EnvPresenter() {
-		this.fieldViews = new HashMap<>();
-		this.robotViewMap = new HashMap<>();
 		this.autorobots = new HashSet<>();
 		this.pause = false;
 	}
@@ -433,64 +425,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	    }
 	    return null;  // Explicitly return null if no robot is found
 	}
-
-
-	public FieldView fieldAt(Position pos) {
-		return fieldViews.get(pos);
-	}
-
-	public void addRobot()	{
-		Position pos = new Position(0, 0);
-		Robot robot = ControlledRobot.create((Environment) this.environment, pos);
-		this.robots.add(robot);
-		robot.addObserver(this);
-	}
-
-	public void MoveRight(){
-		if(this.controlledRobot == null){
-			return;
-		}
-		this.controlledRobot.turn(1);
-	}
-
-    public void MoveLeft(){
-		if(this.controlledRobot == null){
-			return;
-		}
-		this.controlledRobot.turn(7);
-	}
-
-    public void MoveForward(){
-		if(this.controlledRobot == null){
-			return;
-		}
-		this.controlledRobot.move();
-	}
-
-	public void mouseClicked(MouseEvent e) {
-		// Handle mouse click events on FieldViews
-		FieldView clickedFieldView = (FieldView) e.getSource();
-		Position position = clickedFieldView.getPos();
-
-		for(ToolRobot robot : this.robots)
-		{
-			if(robot.getPosition().equals(position) && !isRobotInAutoRobots(robot, this.autorobots))
-			{
-				this.controlledRobot = robot;
-				printWriter.println("Controlled Robot has been choosed");
-			}
-		}
-
-	}
-
-    private boolean isRobotInAutoRobots(ToolRobot robot, Set<Robot> autorobots) {
-        for (Robot autoRobot : autorobots) {
-            if (autoRobot.equals(robot)) { 
-                return true;
-            }
-        }
-        return false;
-    }
 
 	private void moveDirection(Circle robotBody, double newX, double newY) {
 	    if (robotBody != null) {
