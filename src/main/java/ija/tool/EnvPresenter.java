@@ -97,13 +97,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		}
 
 		root = new BorderPane();
-		root.setStyle("-fx-border-color: black; -fx-border-width: 10 0 0 0;");
-
-		root.setStyle("-fx-border-color: black; -fx-border-width: 0 0 10 0;");
-
-		root.setStyle("-fx-border-color: black; -fx-border-width: 0 10 0 0;");
-
-		root.setStyle("-fx-border-color: black; -fx-border-width: 0 0 0 10;");
 
 		Environment room = Room.create(parameters.get("GameField").get("width"), parameters.get("GameField").get("height"));
 
