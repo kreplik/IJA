@@ -8,7 +8,7 @@ positionY=500
 
 [Robot2]
 positionX=320
-positionY=500
+positionY=200
 
 [Obstacle1]
 positionX=500
@@ -42,4 +42,14 @@ positionY=290
 positionX=180
 positionY=200
 
+[Obstacle9]
+positionX=650
+positionY=150
 
+[Obstacle10]
+positionX=220
+positionY=0
+
+[Obstacle8]
+positionX=400
+positionY=100

@@ -55,34 +55,34 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
         int newX = this.position.getCol();
         int newY = this.position.getRow();
         switch (this.angle) {
-									case 0:
-										newY -=10;
-										break;
-									case 45:
-										newY-=10;
-										newX+=10;
-										break;
-									case 90:
-										newX+=10;
-										break;
-									case 135:
-										newX+=10;
-										newY+=10;
-										break;
-									case 180:
-										newY+=10;
-										break;
-									case 225:
-										newY+=10;
-										newX-=10;
-										break;
-									case 270:
-										newX-=10;
-										break;
-									case 315:
-										newX-=10;
-										newY-=10;
-										break;
+			case 0:
+				newY -=1;
+				break;
+			case 45:
+				newY-=1;
+				newX+=1;
+				break;
+			case 90:
+				newX+=1;
+				break;
+			case 135:
+				newX+=1;
+				newY+=1;
+				break;
+			case 180:
+				newY+=1;
+				break;
+			case 225:
+				newY+=1;
+				newX-=1;
+				break;
+			case 270:
+				newX-=1;
+				break;
+			case 315:
+				newX-=1;
+				newY-=1;
+				break;
             default:
                 return false;
         }
@@ -104,32 +104,32 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
         int newY = this.position.getRow();
         switch (this.angle) {
             case 0:
-                newY -=10;
+                newY -=1;
                 break;
             case 45:
-                newY-=10;
-                newX+=10;
+                newY-=1;
+                newX+=1;
                 break;
             case 90:
-                newX+=10;
+                newX+=1;
                 break;
             case 135:
-                newX+=10;
-                newY+=10;
+                newX+=1;
+                newY+=1;
                 break;
             case 180:
-                newY+=10;
+                newY+=1;
                 break;
             case 225:
-                newY+=10;
-                newX-=10;
+                newY+=1;
+                newX-=1;
                 break;
             case 270:
-                newX-=10;
+                newX-=1;
                 break;
             case 315:
-                newX-=10;
-                newY-=10;
+                newX-=1;
+                newY-=1;
                 break;
             default:
                 return false; 
@@ -158,10 +158,10 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
         return this.position;
     }
 
-				@Override
-				public Position getPrevPosition(){
-					return this.prevPosition;
-				}
+	@Override
+	public Position getPrevPosition(){
+		return this.prevPosition;
+	}
 
     @Override
     public int angle() {

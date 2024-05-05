@@ -21,7 +21,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import java.util.*;
 import javafx.geometry.Pos;
-
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.application.Application;
@@ -281,23 +283,31 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 		Button move = new Button("Move");
 		move.setStyle(actionButtonStyle);
-		move.setOnAction(event -> {
+
+		Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(20), e -> {
 		    if (activeControlledR == null) {
 		        showAlert("No robot selected to move.");
 		        return;
 		    }
 		    Position pos = new Position((int) activeControlledR.getCenterX(), (int) activeControlledR.getCenterY());
+		    int count = 0;
 		    for (Robot ctrlRobot : environment.getList()) {
 		        if (ctrlRobot.getPosition().equals(pos)) {
 		            if (ctrlRobot.canMove()) {
 		                printWriter.println("Controlled robot moved forward.");
+		                ctrlRobot.move();
 		            } else {
 		                printWriter.println("Controlled robot is blocked.");
+		                break; // Break out of the loop if the robot is blocked.
 		            }
-		            ctrlRobot.move();
+		            if (++count >= 20) break; // Stop after 20 moves.
 		        }
 		    }
-		});
+		}));
+		moveTimeline.setCycleCount(Timeline.INDEFINITE);
+
+		move.setOnMousePressed(event -> moveTimeline.play());
+		move.setOnMouseReleased(event -> moveTimeline.stop());
 
 		Button turnR = new Button("Right");
 		turnR.setStyle(actionButtonStyle);
@@ -395,7 +405,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				});
 
 				try {
-					Thread.sleep(300); // Adjust the delay between movements
+					Thread.sleep(20); // Adjust the delay between movements
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
