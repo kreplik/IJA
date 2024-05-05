@@ -164,6 +164,7 @@ public class ControlledRobot implements Robot{
     }
 
 	/**
+		* Returns robot's position
 		* @return Robot's position
 		*/
 	@Override
@@ -172,6 +173,7 @@ public class ControlledRobot implements Robot{
     }
 
 	/**
+		* Returns robot's previous position
 		* @return Robot's previous position
 		*/
 	@Override
@@ -180,6 +182,7 @@ public class ControlledRobot implements Robot{
 	}
 
 	/**
+		* Returns angle
 		* @return Robot's angle
 		*/
     @Override

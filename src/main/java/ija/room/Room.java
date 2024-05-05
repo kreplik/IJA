@@ -120,6 +120,7 @@ public class Room implements Environment {
     }
 
 	/**
+		* Returns room's height
 		* @return Room's height
 		*/
 	@Override
@@ -128,6 +129,7 @@ public class Room implements Environment {
     }
 
 	/**
+		* Return room's width
 		* @return Room's width
 		*/
 	@Override
@@ -136,6 +138,7 @@ public class Room implements Environment {
     }
 
 	/**
+		* Return List of robots
 		* @return List of robots
 		*/
 	@Override
@@ -146,6 +149,7 @@ public class Room implements Environment {
     }
 
 				/**
+					* Return set of robots
 				* @return Set of Robots
 				 */
     @Override
@@ -154,6 +158,7 @@ public class Room implements Environment {
     }
 
 	/**
+		* Returns obstacle
 		* @return Concrete obstacle
 		*/
 	@Override
