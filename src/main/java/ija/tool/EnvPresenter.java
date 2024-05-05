@@ -294,6 +294,8 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		});
 
 		Button pauseButton = new Button("Pause");
+		pauseButton.setPrefWidth(65);
+
 		// Initial color setting based on initial pause state
 		updateButtonColor(pauseButton, this.pause);
 
@@ -481,9 +483,11 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 	private void updateButtonColor(Button button, boolean isPaused) {
 	    if (isPaused) {
-	        button.setStyle("-fx-background-color: red; -fx-text-fill: white;");
-	    } else {
+									button.setText("Play");
 	        button.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+	    } else {
+									button.setText("Pause");
+	        button.setStyle("-fx-background-color: red; -fx-text-fill: white;");
 	    }
 	}
 
