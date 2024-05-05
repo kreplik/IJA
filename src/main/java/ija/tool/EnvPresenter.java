@@ -13,32 +13,25 @@ import ija.tool.view.FieldView;
 import ija.tool.common.Position;
 import ija.tool.view.RobotView;
 
-import javax.swing.*;
 
 import java.io.IOException;
 import java.util.*;
 
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
-import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 
 
 public class EnvPresenter extends Application implements Observable.Observer {
@@ -55,7 +48,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	private static Map<String, Map<String, Integer>> parameters;
 	private Set<Obstacle> obstacles;
 
-	private Circle activeRobot;
 	private Circle activeControlledR;
 
 	private final Set<Circle> robotViews = new HashSet<>();
@@ -215,54 +207,46 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		});
 
 		Button addRobot = new Button("Add Robot");
-		addRobot.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px;");
-
 		addRobot.setOnAction(e -> {
-
-			TextInputDialog dialog = new TextInputDialog();
-			dialog.setTitle("Add robot");
-			dialog.setHeaderText("Enter robot's position as \"x,y\"");
-			dialog.setContentText("Position:");
-
-
-			// Show the dialog and wait for the user's response
-			Optional<String> result = dialog.showAndWait();
-
-			// Process the user's response
-			result.ifPresent(pos -> {
-
-				String[] positionParameters = pos.split(",");
-				Position position = new Position(Integer.parseInt(positionParameters[0]), Integer.parseInt(positionParameters[1]));
-				Environment env = (Environment) environment;
-
-
-				ControlledRobot newRobot = ControlledRobot.create(env,position);
-				if(newRobot != null){
-					newRobot.addObserver(this);
-					Circle circle = new Circle(position.getCol(), position.getRow(), 25, Color.RED);
-					root.getChildren().add(circle);
-					this.controlledRobots.add(circle);
-					circle.setOnMouseClicked(event1 ->{
-						for(Circle allRobots : this.controlledRobots){
-							if(!allRobots.equals(circle)){
-								allRobots.setFill(Color.RED);
-							}
-						}
-						circle.setFill(Color.GREEN);
-						//Circle newcircle = new Circle(circle.getCenterX(), circle.getCenterY(), 25, Color.BLUE);
-						this.activeControlledR = circle;
-						//root.getChildren().add(circle);
-
-						this.robotViews.add(circle);
-					});
-
-				}
-
-
-			});
-
-
+		    TextInputDialog dialog = new TextInputDialog();
+		    dialog.setTitle("Add robot");
+		    dialog.setHeaderText("Enter robot's position as \"x,y\"");
+		    dialog.setContentText("Position:");
+		
+		    Optional<String> result = dialog.showAndWait();
+		    result.ifPresent(pos -> {
+		        String[] positionParameters = pos.split(",");
+		        Position position = new Position(Integer.parseInt(positionParameters[0]), Integer.parseInt(positionParameters[1]));
+		        Environment env = (Environment) environment;
+			
+		        ControlledRobot newRobot = ControlledRobot.create(env, position);
+		        if (newRobot != null) {
+		            newRobot.addObserver(this);
+				
+		            Circle circle = new Circle(position.getCol(), position.getRow(), 25, Color.RED);
+		            Circle directionIndicator = new Circle(position.getCol(), position.getRow(), 5, Color.WHITE);
+		            updateDirectionIndicator(directionIndicator, newRobot.angle(), position);
+				
+		            this.robotViews.add(circle);
+		            this.controlledRobots.add(circle);
+		            this.directionIndicators.put(circle, directionIndicator);
+		            this.robotMap.put(circle, newRobot);  // Ensuring the robot is mapped
+				
+		            root.getChildren().addAll(circle, directionIndicator);
+				
+		            circle.setOnMouseClicked(event -> {
+		                this.activeControlledR = circle;
+		                for (Circle otherCircle : this.controlledRobots) {
+		                    if (!otherCircle.equals(circle)) {
+		                        otherCircle.setFill(Color.RED);
+		                    }
+		                }
+		                circle.setFill(Color.GREEN);
+		            });
+		        }
+		    });
 		});
+
 
 		Button move = new Button("Move");
 
@@ -271,7 +255,11 @@ public class EnvPresenter extends Application implements Observable.Observer {
 			for(Robot ctrlRobot : environment.getList()){
 
 				if(ctrlRobot.getPosition().equals(pos)){
-					System.out.println("ctrl moved");
+					if(ctrlRobot.canMove()){
+						System.out.println("ctrl moved");
+					}else{
+						System.out.println("ctrl is blocked");
+					}
 					ctrlRobot.move();
 				}
 			}
@@ -296,7 +284,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 			for(Robot robot : robotList){
 				Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
 				if(robot.getPosition().equals(pos)){
-					robot.turn(-1);
+					robot.turn(7);
 				}
 			}
 		});
@@ -362,55 +350,17 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 	}
 
-	private void moveRobot(double newX, double newY) {
-		// Create a translate transition
-		TranslateTransition transition = new TranslateTransition(Duration.seconds(1), this.activeRobot);
-		transition.setToX(newX - this.activeRobot.getCenterX());
-		transition.setToY(newY - this.activeRobot.getCenterY());
-
-		// Set up event handler to update robot position after animation completes
-		transition.setOnFinished(event -> {
-			this.activeRobot.setTranslateX(0);
-			this.activeRobot.setTranslateY(0);
-			this.activeRobot.setCenterX(newX);
-			this.activeRobot.setCenterY(newY);
-		});
-
-		this.robotViews.remove(this.activeRobot);
-		root.getChildren().remove(this.activeRobot);
-
-		if(controlledRobots.contains(this.activeRobot)){
-			Circle circle = new Circle(newX, newY, 25, Color.RED);
-			root.getChildren().add(circle);
-			this.controlledRobots.add(circle);
-			this.controlledRobots.remove(this.activeRobot);
-
-
-				this.activeControlledR = circle;
-				this.robotViews.add(circle);
-
-		}
-		else {
-			Circle newRobot = new Circle(newX, newY, 25, Color.YELLOW);
-			this.robotViews.add(newRobot);
-			root.getChildren().add(newRobot);
-		}
-
-		// Play the animation
-		transition.play();
-	}
-
-
 	public void update(Observable o) {
 	    if (o instanceof ToolRobot) {
 	        ToolRobot robot = (ToolRobot) o;
 	        Position newPos = robot.getPosition();
 	        Circle robotBody = getRobotsView(new Position(robot.getPrevPosition().getCol(), robot.getPrevPosition().getRow()));
-	        if (robotBody != null) {
+	        if (robotBody != null && robotMap.containsKey(robotBody)) {
 	            moveeRobot(robotBody, newPos.getCol(), newPos.getRow());
 	        }
 	    }
 	}
+
 
 
 
@@ -438,7 +388,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 	public void MoveRight(){
 		if(this.controlledRobot == null){
-			JOptionPane.showMessageDialog(null, "Choose robot", "Move right", JOptionPane.INFORMATION_MESSAGE);
+			System.out.println("You havent picked a robot");
 			return;
 		}
 		this.controlledRobot.turn(1);
@@ -446,7 +396,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
     public void MoveLeft(){
 		if(this.controlledRobot == null){
-			JOptionPane.showMessageDialog(null, "Choose robot", "Move right", JOptionPane.INFORMATION_MESSAGE);
+			System.out.println("You havent picked a robot");
 			return;
 		}
 		this.controlledRobot.turn(7);
@@ -454,7 +404,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
     public void MoveForward(){
 		if(this.controlledRobot == null){
-			JOptionPane.showMessageDialog(null, "Choose robot", "Move right", JOptionPane.INFORMATION_MESSAGE);
+			System.out.println("You havent picked a robot");
 			return;
 		}
 		this.controlledRobot.move();
@@ -490,32 +440,37 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	        // Update the robot's main body position
 	        robotBody.setCenterX(newX);
 	        robotBody.setCenterY(newY);
-		
+
 	        // Assuming `robotMap` maps each Circle to its corresponding Robot object
 	        Robot robot = robotMap.get(robotBody);
 	        if (robot != null) {
 	            // Convert angle to radians; adjust for GUI coordinate system
 	            double angleInRadians = Math.toRadians(robot.angle()); // Convert angle for correct orientation
-			
+
 	            // Adjusting for the described directions:
 	            // 0 degrees is up (-sin), 90 degrees is right (cos), 180 degrees is down (+sin), 270 degrees is left (-cos)
 	            double offsetX = (25 - 5) * Math.sin(angleInRadians);  // sin for horizontal offset
 	            double offsetY = -(25 - 5) * Math.cos(angleInRadians); // -cos for vertical offset (GUI has inverted y-axis)
-			
+
 	            Circle directionIndicator = directionIndicators.get(robotBody);
 	            if (directionIndicator != null) {
 	                directionIndicator.setCenterX(newX + offsetX);
 	                directionIndicator.setCenterY(newY + offsetY);
 	            }
-	        } else {
-	            System.out.println("No robot found for this body");
 	        }
 	    } else {
 	        System.out.println("Robot body cannot be null");
 	    }
 	}
 
-
+	private void updateDirectionIndicator(Circle indicator, int angle, Position position) {
+	    double radius = 25; // main circle radius
+	    double angleInRadians = Math.toRadians(angle);
+	    double offsetX = radius * Math.sin(angleInRadians);  // Adjusted for GUI
+	    double offsetY = -radius * Math.cos(angleInRadians); // Adjusted for GUI y-axis direction
+	    indicator.setCenterX(position.getCol() + offsetX);
+	    indicator.setCenterY(position.getRow() + offsetY);
+	}
 
 }
 
