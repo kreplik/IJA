@@ -13,8 +13,8 @@ public class Position {
      * @param row Row coordinate
      */
     public Position(int col, int row) {
-		this.col = col;
-		this.row = row;
+								this.col = col;
+								this.row = row;
 
     }
 
@@ -66,8 +66,12 @@ public class Position {
      * @return True if the position is valid
      */
 	public boolean validPosition(Position other,int angle) {
+					// Distance between obstacle and robot
 		int dx = this.col - other.col;
 		int dy = this.row - other.row;
+
+
+		// Check new position according to robot's angle
 		switch (angle){
 			case 0:
 				if(this.col < other.col) {

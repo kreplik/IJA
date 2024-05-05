@@ -24,7 +24,13 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
   
     }
 
-    public static ControlledRobot create(Environment env, Position pos) {
+	/**
+		* Creates new robot in environment
+		* @param env Environment
+		* @param pos Robot's position
+		* @return New robot
+		*/
+	public static ControlledRobot create(Environment env, Position pos) {
         if (env.containsPosition(pos) && !env.obstacleAt(pos,999) && !env.robotAt(pos,null)) {
             ControlledRobot robot = new ControlledRobot(env, pos);
 
@@ -36,10 +42,15 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
     }
 
 
-    @Override
+	/**
+		* Moves robot to the next position
+		* @return result of validation next position
+		*/
+	@Override
     public boolean move() {
         int newX = this.position.getCol();
         int newY = this.position.getRow();
+
         switch (this.angle) {
 			case 0:
 				newY -=1;
@@ -74,20 +85,27 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
         }
     
         if (environment.containsPosition(new Position(newX, newY)) && !environment.obstacleAt(new Position(newX, newY),this.angle) && !environment.robotAt(new Position(newX, newY),this)) {
-            Position old = new Position(this.position.getCol(),this.position.getRow());
-			this.prevPosition = old;
-			this.position = new Position(newX, newY);
+            // Updates robot's position and notifies observers about changes
+												Position old = new Position(this.position.getCol(),this.position.getRow());
+												this.prevPosition = old;
+												this.position = new Position(newX, newY);
             this.notifyObservers();
 
             return true; 
         }
         return false;
     }
-    
-    @Override
+
+	/**
+		* Checks if robot can move to the next position according to its angle
+		* @return result of validation
+		*/
+	@Override
     public boolean canMove() {
         int newX = this.position.getCol();
         int newY = this.position.getRow();
+
+								// Changes new coordinates according to robot's angle
         switch (this.angle) {
             case 0:
                 newY -=1;
@@ -121,10 +139,14 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
                 return false; 
         }
 
+								// Returns result of validation new position
         return environment.containsPosition(new Position(newX, newY)) && !environment.obstacleAt(new Position(newX, newY),this.angle) && !environment.robotAt(new Position(newX, newY),this);
     }
 
 
+	/**
+		* Turns robot and notifies observers about changes
+		*/
     @Override
     public void turn(int num) {
         this.angle = (this.angle + (45*num)) % 360;
@@ -132,34 +154,53 @@ public class ControlledRobot extends AbstractObservableRobot implements Robot{
         this.notifyObservers();
     }
 
-    @Override
+	/**
+		* Turns robot and notifies observers about changes
+		*/
+	@Override
     public void turn() {
         this.angle = (this.angle + 90) % 360;
         this.prevPosition = this.position;
         this.notifyObservers();
     }
 
-    @Override
+	/**
+		* @return Robot's position
+		*/
+	@Override
     public Position getPosition() {
         return this.position;
     }
 
+	/**
+		* @return Robot's previous position
+		*/
 	@Override
 	public Position getPrevPosition(){
 		return this.prevPosition;
 	}
 
+	/**
+		* @return Robot's angle
+		*/
     @Override
     public int angle() {
         return this.angle;
     }
 
-    @Override
+	/**
+		* Add observer to the list
+		* @param o Observer
+		*/
+	@Override
     public void addObserver(Observer o) {
         observers.add(o);
     }
 
-    @Override
+	/**
+		* Notifies all observers about changes
+		*/
+	@Override
     public void notifyObservers() {
         for (Observer observer : observers) {
             observer.update(this);
