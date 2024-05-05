@@ -5,20 +5,31 @@ public class Position {
     private final int row;
 
     public Position(int col, int row) {
-		this.col = col;
-		this.row = row;
+								this.col = col;
+								this.row = row;
 
     }
 
-    public int getRow() {
+	/**
+		* @return Returns object's row number
+		*/
+	public int getRow() {
         return this.row;
     }
 
+	/**
+		* @return Returns object's column number
+		*/
     public int getCol() {
         return this.col;
     }
 
-    @Override
+	/**
+		* Compares two objects
+		* @param o Object to compare with
+		* @return result of comparison
+		*/
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -26,15 +37,31 @@ public class Position {
         return this.row == position.row && this.col == position.col;
     }
 
-    public boolean isNear(Position other, double radius) {
+	/**
+		* Checks if there is a robot in area
+		* @param other Robot's next position
+		* @param radius Robot's radius
+		* @return true, if there is another robot
+		*/
+	public boolean isNear(Position other, double radius) {
         double dx = this.col - other.col;
         double dy = this.row - other.row;
-        return Math.sqrt(dx * dx + dy * dy) <= radius + radius; // Check if the distance is less than or equal to the sum of the radii
+        return Math.sqrt(dx * dx + dy * dy) <= radius + radius;
     }
-    
+
+	/**
+		* Checks if robot's next position is valid
+		* @param other Robot's position
+		* @param angle Robot's angle
+		* @return true, if position is valid
+		*/
 	public boolean validPosition(Position other,int angle) {
+					// Distance between obstacle and robot
 		int dx = this.col - other.col;
 		int dy = this.row - other.row;
+
+
+		// Check new position according to robot's angle
 		switch (angle){
 			case 0:
 				if(this.col < other.col) {
@@ -106,25 +133,9 @@ public class Position {
 						return this.col < other.col - 75 || this.col > other.col + 25;
 					}
 				}
-				return false;
+
 		}
-		int distanceSquared = dx * dx + dy * dy;
-		int maxDistanceSquared = 35 * 35;
-
-		int dx2 = this.col - other.col;
-		int dy2 = this.row + 50 - other.row;
-		int distanceSquared2 = dx2 * dx2 + dy2 * dy2;
-
-		int dx3 = this.col + 50 - other.col;
-		int dy3 = this.row - other.row;
-		int distanceSquared3 = dx3 * dx3 + dy3 * dy3;
-
-		int dx4 = this.col + 50 - other.col;
-		int dy4 = this.row + 50 - other.row;
-		int distanceSquared4 = dx4 * dx4 + dy4 * dy4;
-
-		int min =  Math.min(Math.min(distanceSquared,Math.min(distanceSquared2,distanceSquared3)),distanceSquared4);
-		return min > maxDistanceSquared;
+		return true;
 	}
 
 
