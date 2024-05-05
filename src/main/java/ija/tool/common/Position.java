@@ -1,23 +1,44 @@
 package ija.tool.common;
 
+/**
+ * Represents a 2D position with column and row
+ */
 public class Position {
     private final int col;
     private final int row;
 
+	/**
+     * Constructs a Position object
+     * @param col Column coordinate
+     * @param row Row coordinate
+     */
     public Position(int col, int row) {
 		this.col = col;
 		this.row = row;
 
     }
 
+	/**
+     * Returns the row
+     * @return Row coordinate
+     */
     public int getRow() {
         return this.row;
     }
 
+	/**
+     * Returns the column 
+     * @return Column coordinate
+     */
     public int getCol() {
         return this.col;
     }
 
+	/**
+     * Checks if this position is equal to another object
+     * @param o The object to compare with
+     * @return True if the objects are the same or represent the same position
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -26,12 +47,24 @@ public class Position {
         return this.row == position.row && this.col == position.col;
     }
 
+	/**
+     * Calculates whether another position is within a certain radius
+     * @param other The position to compare to
+     * @param radius The radius to consider
+     * @return True if the distance is less than or equal to the specified radius
+     */
     public boolean isNear(Position other, double radius) {
         double dx = this.col - other.col;
         double dy = this.row - other.row;
         return Math.sqrt(dx * dx + dy * dy) <= radius + radius; // Check if the distance is less than or equal to the sum of the radii
     }
     
+	/**
+     * Determines if a given position is valid
+     * @param other The position to validate
+     * @param angle The angle specifying direction
+     * @return True if the position is valid
+     */
 	public boolean validPosition(Position other,int angle) {
 		int dx = this.col - other.col;
 		int dy = this.row - other.row;
@@ -127,12 +160,19 @@ public class Position {
 		return min > maxDistanceSquared;
 	}
 
-
+	/**
+     * Returns a hash code value for this position
+     * @return A hash code value for this object
+     */
     @Override
     public int hashCode() {
         return 31 * row + col;
     }
 
+	/**
+     * Returns a string representation of the position
+     * @return String in format "[col, row]"
+     */
     @Override
     public String toString() {
         return "[" + col + ", " + row + "]";

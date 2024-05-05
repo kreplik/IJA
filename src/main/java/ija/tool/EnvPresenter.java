@@ -37,7 +37,9 @@ import javafx.stage.Stage;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
-
+/**
+ * @brief Main class for initializing and running the robot environment GUI
+ */
 public class EnvPresenter extends Application implements Observable.Observer {
 	private ToolEnvironment environment;
 	public List<ToolRobot> robots;
@@ -57,15 +59,19 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	boolean pause;
 	private PrintWriter printWriter;
 
-
+	/**
+     * Constructor for EnvPresenter initializes sets for autorobots and sets pause state
+     */
 	public EnvPresenter() {
 		this.autorobots = new HashSet<>();
 		this.pause = false;
 	}
 
-
-	// Declare other UI elements as needed
-
+	/**
+     * Initializes the application stage including loading parameters, setting up the environment, and preparing the UI
+     * @param primaryStage The primary stage for this application
+     * @throws Exception If an error occurs during initialization
+     */
 	@Override
 	public void start(Stage primaryStage) throws Exception{
 		try {
@@ -73,13 +79,12 @@ public class EnvPresenter extends Application implements Observable.Observer {
     	    if (logFile.exists()) {
     	        logFile.delete();  // Ensures that the file is fresh each run
     	    }
-    	    // Ensure the PrintWriter flushes automatically after each println
     	    printWriter = new PrintWriter(new FileWriter(logFile), true);
     	} catch (IOException e) {
     	    e.printStackTrace();
     	}
 
-
+		// Load settings from parameters file
 		Main.ParametersLoader loader = new Main.ParametersLoader("data/parameters.txt");
 		try {
 			parameters = loader.loadParameters();
@@ -88,7 +93,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		}
 
 		root = new BorderPane();
-
+		// Setup simulation environment
 		Environment room = Room.create(parameters.get("GameField").get("width"), parameters.get("GameField").get("height"));
 
 		this.robots = room.robots();
@@ -96,7 +101,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		this.environment = room;
 		this.obstacles = room.getObstacles();
 
-
+		// Initialize obstacles and robots based on loaded parameters
 		for(Map.Entry<String, Map<String, Integer>> entry : parameters.entrySet())
 		{
 			if(entry.getKey().contains("Obstacle")) {
@@ -131,7 +136,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		root.setCenter(mainPanel);
 
 
-
+		// Initializes robots and obstacles in the simulation based on configuration parameters
 		for(Obstacle obstacle : this.obstacles){
 			Position pos = new Position(obstacle.getPosition().getCol(),obstacle.getPosition().getRow());
 			Rectangle rectangle = new Rectangle(pos.getCol(),pos.getRow(),50,50);
@@ -145,7 +150,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		    Position pos = new Position(robot.getPosition().getCol(), robot.getPosition().getRow());
 		    Circle robotBody = new Circle(pos.getCol(), pos.getRow(), 25, Color.YELLOW);
 
-		    // Direction indicator creation (as you did before)
+		    // Direction indicator creation
 		    double angleInRadians = Math.toRadians(robot.angle());
 		    double offsetX = (25 - 5) * Math.cos(angleInRadians);
 		    double offsetY = (25 - 5) * Math.sin(angleInRadians);
@@ -160,14 +165,10 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		    this.robotViews.add(robotBody);
 		    root.getChildren().addAll(robotBody, directionIndicator);
 		    directionIndicators.put(robotBody, directionIndicator);
-		    robotMap.put(robotBody, robot);  // Link the Circle to the Robot
+		    robotMap.put(robotBody, robot);  
 		}
 
-
-		//printWriter.println(robotViews);
-
-		//moveRobot(200, 200,robot);
-
+		// Sets up the navigation bar with controls for robot interactions
 		FlowPane navbar = new FlowPane();
 		navbar.setPadding(new Insets(10,10,10,10));
 		navbar.setHgap(10);
@@ -208,12 +209,14 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				Position position = new Position(Integer.parseInt(positionParameters[0]), Integer.parseInt(positionParameters[1]));
 				Environment env = (Environment) environment;
 				if (!env.createObstacleAt(position.getCol(), position.getRow())) {
-					// Show error message
+					showAlert("No robot selected to move.");
+				}else{
+					Rectangle obstacle = new Rectangle(position.getCol(),position.getRow(),50,50);
+					obstacle.setFill(Color.BLACK);
+					obstacle.setStyle("-fx-border-color: #1a16af; -fx-border-width: 5; -fx-border-radius: 5;");
+					root.getChildren().add(obstacle);
 				}
-				Rectangle obstacle = new Rectangle(position.getCol(),position.getRow(),50,50);
-				obstacle.setFill(Color.BLACK);
-				obstacle.setStyle("-fx-border-color: #1a16af; -fx-border-width: 5; -fx-border-radius: 5;");
-				root.getChildren().add(obstacle);
+				
 
 			});
 
@@ -280,9 +283,9 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		                ctrlRobot.move();
 		            } else {
 		                printWriter.println("Controlled robot is blocked.");
-		                break; // Break out of the loop if the robot is blocked.
+		                break; // Break out of the loop if the robot is blocked
 		            }
-		            if (++count >= 20) break; // Stop after 20 moves.
+		            if (++count >= 20) break; // Stop after 20 moves
 		        }
 		    }
 		}));
@@ -327,11 +330,10 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 
 		Button pauseButton = new Button("Pause");
-		// Initial color setting based on initial pause state
 		updateButtonColor(pauseButton, this.pause);
 		pauseButton.setPrefWidth(70);
 		pauseButton.setOnAction(event -> {
-		    this.pause = !this.pause;  // Toggle the pause state
+		    this.pause = !this.pause; 
 		    updateButtonColor(pauseButton, this.pause);  // Update button color based on the new state
 		});
 
@@ -339,7 +341,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 		Scene scene = new Scene(root, room.cols(), room.rows());
 		root.setId("pane");
-		//Scene scene = new Scene(container);
 
 
 		primaryStage.setScene(scene);
@@ -360,7 +361,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 
 
-		// Add other buttons to the navbar and set their event handlers similarly
+		// Add other buttons to the navbar
 
 		root.setBottom(navbar);
 
@@ -387,7 +388,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				});
 
 				try {
-					Thread.sleep(20); // Adjust the delay between movements
+					Thread.sleep(20); // Delay between movements
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -399,20 +400,28 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 	}
 
+	/**
+	 * Updates the view based on changes in the observable robot objects
+	 * @param o The observable object that has changed
+	 */
 	public void update(Observable o) {
 	    if (o instanceof ToolRobot) {
 	        ToolRobot robot = (ToolRobot) o;
 	        Position newPos = robot.getPosition();
+	        // Retrieve the circle representing the robot's previous position
 	        Circle robotBody = getRobotsView(new Position(robot.getPrevPosition().getCol(), robot.getPrevPosition().getRow()));
 	        if (robotBody != null && robotMap.containsKey(robotBody)) {
+	            // Move circle to new position
 	            moveDirection(robotBody, newPos.getCol(), newPos.getRow());
 	        }
 	    }
 	}
 
-
-
-
+	/**
+	 * Retrieves circle of a robot at a given position
+	 * @param pos The position to check for a robot
+	 * @return Circle object if found
+	 */
 	public Circle getRobotsView(Position pos) {
 	    for (Circle circle : robotViews) {
 	        Position circlePos = new Position((int) circle.getCenterX(), (int) circle.getCenterY());
@@ -420,64 +429,72 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	            return circle;
 	        }
 	    }
-	    return null;  // Explicitly return null if no robot is found
+	    return null;
 	}
 
+	/**
+	 * Moves circle to a new location on the GUI
+	 * @param robotBody Circle of the robot to move
+	 * @param newX The new x-coordinate
+	 * @param newY The new y-coordinate
+	 */
 	private void moveDirection(Circle robotBody, double newX, double newY) {
 	    if (robotBody != null) {
-	        // Update the robot's main body position
 	        robotBody.setCenterX(newX);
 	        robotBody.setCenterY(newY);
 
-	        // Assuming `robotMap` maps each Circle to its corresponding Robot object
 	        Robot robot = robotMap.get(robotBody);
 	        if (robot != null) {
-
 	            Circle directionIndicator = directionIndicators.get(robotBody);
 	            if (directionIndicator != null) {
-	                updateDirectionIndicator(directionIndicator,robot.angle(),robot.getPosition());
-
+	                // Update the direction indicator's position based on the robot's new orientation
+	                updateDirectionIndicator(directionIndicator, robot.angle(), robot.getPosition());
 	            }
 	        }
 	    }
 	}
 
+	/**
+	 * Updates the position of a robot's direction indicator based on its angle
+	 * @param indicator The direction indicator to move
+	 * @param angle The current angle of the robot
+	 * @param position The current position of the robot
+	 */
 	private void updateDirectionIndicator(Circle indicator, int angle, Position position) {
 	    double radius = 25; // main circle radius
 	    double angleInRadians = Math.toRadians(angle);
-	    double offsetX = radius * Math.sin(angleInRadians);  // Adjusted for GUI
-	    double offsetY = -radius * Math.cos(angleInRadians); // Adjusted for GUI y-axis direction
+	    double offsetX = radius * Math.sin(angleInRadians);
+	    double offsetY = -radius * Math.cos(angleInRadians);
 	    indicator.setCenterX(position.getCol() + offsetX);
 	    indicator.setCenterY(position.getRow() + offsetY);
 	}
 
+	/**
+	 * Updates the style and text
+	 * @param button The button to update
+	 * @param isPaused The current pause state
+	 */
 	private void updateButtonColor(Button button, boolean isPaused) {
 	    if (isPaused) {
-			button.setText("Play");
-	        button.setStyle("-fx-background-color: linear-gradient(#7fcd91, #0f3d0f), " +
-    	                           "radial-gradient(center 50% -40%, radius 200%, #5a9f6e 45%, #1e4b23 50%); " +
-    	                           "-fx-background-radius: 6; " +
-    	                           "-fx-background-color: green; -fx-text-fill: white;" +
-    	                           "-fx-font-weight: bold; " +
-    	                           "-fx-font-size: 14px;");
+	        button.setText("Play");
+	        button.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
 	    } else {
-			button.setText("Pause");
-	        button.setStyle("-fx-background-color: linear-gradient(#7fcd91, #0f3d0f), " +
-    	                           "radial-gradient(center 50% -40%, radius 200%, #5a9f6e 45%, #1e4b23 50%); " +
-    	                           "-fx-background-radius: 6; " +
-    	                           "-fx-background-color: red; -fx-text-fill: white;" +
-    	                           "-fx-font-weight: bold; " +
-    	                           "-fx-font-size: 14px;");
+	        button.setText("Pause");
+	        button.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
 	    }
 	}
 
+	/**
+	 * Displays an informational alert 
+	 * @param message The message to display in the alert dialog
+	 */
 	private void showAlert(String message) {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Information");
-        alert.setHeaderText(null); // No header
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+	    Alert alert = new Alert(AlertType.INFORMATION);
+	    alert.setTitle("Information");
+	    alert.setHeaderText(null);
+	    alert.setContentText(message);
+	    alert.showAndWait();
+	}
 
 }
 
