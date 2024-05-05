@@ -286,9 +286,9 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 				if(ctrlRobot.getPosition().equals(pos)){
 					if(ctrlRobot.canMove()){
-						printWriter.println("Controled robot moved forward");
+						printWriter.println("Controlled robot moved forward");
 					}else{
-						printWriter.println("Controled robot is blocked");
+						printWriter.println("Controlled robot is blocked");
 					}
 					ctrlRobot.move();
 				}
@@ -303,7 +303,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
 				if(robot.getPosition().equals(pos)){
 					robot.turn(1);
-					printWriter.println("Controled robot turned right");
+					printWriter.println("Controlled robot turned right");
 				}
 			}
 		});
@@ -316,7 +316,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 				Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
 				if(robot.getPosition().equals(pos)){
 					robot.turn(7);
-					printWriter.println("Controled robot turned left");
+					printWriter.println("Controlled robot turned left");
 				}
 			}
 		});
@@ -371,11 +371,11 @@ public class EnvPresenter extends Application implements Observable.Observer {
 								continue;
 							}else if (!autorobot.canMove()) {
 								autorobot.turn();
-								printWriter.println(autorobot + "tuned");
+								printWriter.println(autorobot + " turned");
 							}
 							else {
 								autorobot.move();
-								printWriter.println(autorobot + "moved");
+								printWriter.println(autorobot + " moved");
 							}
 						}
 
