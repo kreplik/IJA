@@ -356,7 +356,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 	        Position newPos = robot.getPosition();
 	        Circle robotBody = getRobotsView(new Position(robot.getPrevPosition().getCol(), robot.getPrevPosition().getRow()));
 	        if (robotBody != null && robotMap.containsKey(robotBody)) {
-	            moveeRobot(robotBody, newPos.getCol(), newPos.getRow());
+	            moveDirection(robotBody, newPos.getCol(), newPos.getRow());
 	        }
 	    }
 	}
@@ -435,7 +435,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
         return false;
     }
 
-	private void moveeRobot(Circle robotBody, double newX, double newY) {
+	private void moveDirection(Circle robotBody, double newX, double newY) {
 	    if (robotBody != null) {
 	        // Update the robot's main body position
 	        robotBody.setCenterX(newX);
