@@ -60,9 +60,9 @@ public class Room implements Environment {
     }
     
     @Override
-    public boolean obstacleAt(Position p) {
+    public boolean obstacleAt(Position p,int angle) {
         for (Obstacle obstacle : obstacles) {
-            if (!obstacle.getPosition().validPosition(p)) {
+            if (!obstacle.getPosition().validPosition(p,angle)) {
                 return true;
             }
         }
@@ -72,7 +72,7 @@ public class Room implements Environment {
 
     @Override
     public boolean addRobot(Robot robot) {
-        if (robot != null && !this.robots.contains(robot) && !obstacleAt(robot.getPosition()) && containsPosition(robot.getPosition())) {
+        if (robot != null && !this.robots.contains(robot) && !obstacleAt(robot.getPosition(),999) && containsPosition(robot.getPosition())) {
             return this.robots.add(robot);
         }
         return false;

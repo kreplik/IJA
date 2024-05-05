@@ -8,7 +8,7 @@ import java.util.Set;
 public interface ToolEnvironment {
 				int rows();
 				int cols();
-				boolean obstacleAt(Position p);
+				boolean obstacleAt(Position p,int angle);
 
 				boolean robotAt(Position p, ToolRobot sender);
 				List<ToolRobot> robots();

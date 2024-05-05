@@ -32,11 +32,84 @@ public class Position {
         return Math.sqrt(dx * dx + dy * dy) <= radius + radius; // Check if the distance is less than or equal to the sum of the radii
     }
     
-	public boolean validPosition(Position other) {
+	public boolean validPosition(Position other,int angle) {
 		int dx = this.col - other.col;
 		int dy = this.row - other.row;
+		switch (angle){
+			case 0:
+				if(this.col < other.col) {
+					if (Math.abs(dx) > 75) {
+						return true;
+					}	else {
+						return this.row < other.row - 75 || this.row > other.row -25;
+					}
+				}
+
+				if(this.col > other.col){
+					if(Math.abs(dx) > 25){
+						return true;
+					}
+					else {
+						return this.row < other.row - 75 || this.row > other.row -25;
+					}
+				}
+
+			case 90:
+				if(this.row < other.row) {
+					if (Math.abs(dy) > 75) {
+						return true;
+					}	else {
+						return this.col > other.col + 25 || this.col < other.col -25;
+					}
+				}
+
+				if(this.row > other.row){
+					if(Math.abs(dy) > 25){
+						return true;
+					}
+					else {
+						return this.col > other.col + 25 || this.col < other.col -25;
+					}
+				}
+				break;
+			case 180:
+				if(this.col < other.col) {
+					if (Math.abs(dx) > 75) {
+						return true;
+					}	else {
+						return this.row > other.row + 25 || this.row < other.row -25;
+					}
+				}
+
+				if(this.col > other.col){
+					if(Math.abs(dx) > 25){
+						return true;
+					}
+					else {
+						return this.row > other.row + 25 || this.row < other.row -25;
+					}
+				}
+			case 270:
+				if(this.row < other.row) {
+					if (Math.abs(dy) > 75) {
+						return true;
+					}	else {
+						return this.col < other.col - 75 || this.col > other.col + 25;
+					}
+				}
+
+				if(this.row > other.row){
+					if(Math.abs(dy) > 25){
+						return true;
+					}
+					else {
+						return this.col < other.col - 75 || this.col > other.col + 25;
+					}
+				}
+				return false;
+		}
 		int distanceSquared = dx * dx + dy * dy;
-		int maxDistanceSquared = 25 * 25;
+		int maxDistanceSquared = 35 * 35;
 
 		int dx2 = this.col - other.col;
 		int dy2 = this.row + 50 - other.row;
