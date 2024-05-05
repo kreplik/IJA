@@ -314,7 +314,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		Button pauseButton = new Button("Pause");
 		// Initial color setting based on initial pause state
 		updateButtonColor(pauseButton, this.pause);
-
+		pauseButton.setPrefWidth(70);
 		pauseButton.setOnAction(event -> {
 		    this.pause = !this.pause;  // Toggle the pause state
 		    updateButtonColor(pauseButton, this.pause);  // Update button color based on the new state
