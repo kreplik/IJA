@@ -16,6 +16,7 @@ import ija.tool.view.RobotView;
 
 import java.io.IOException;
 import java.util.*;
+import javafx.geometry.Pos;
 
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
@@ -175,9 +176,25 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		FlowPane navbar = new FlowPane();
 		navbar.setPadding(new Insets(10,10,10,10));
 		navbar.setHgap(10);
+		navbar.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
+		navbar.setAlignment(Pos.CENTER); 
+		// Styling buttons uniformly
+    	String actionButtonStyle = "-fx-background-color: linear-gradient(#7fcd91, #0f3d0f), " +
+    	                           "radial-gradient(center 50% -40%, radius 200%, #5a9f6e 45%, #1e4b23 50%); " +
+    	                           "-fx-background-radius: 6; " +
+    	                           "-fx-text-fill: white; " +
+    	                           "-fx-font-weight: bold; " +
+    	                           "-fx-font-size: 14px;";
+
+    	String creationButtonStyle = "-fx-background-color: linear-gradient(#1d1d1d, #424242), " +
+    	                             "radial-gradient(center 50% -40%, radius 200%, #686868 45%, #2f2f2f 50%); " +
+    	                             "-fx-background-radius: 6; " +
+    	                             "-fx-text-fill: #dcdcdc; " +
+    	                             "-fx-font-weight: bold; " +
+    	                             "-fx-font-size: 14px;";
 
 		Button addObstacle = new Button("Add Obstacle");
-		addObstacle.setStyle("-fx-background-color: #000000; -fx-text-fill: white; -fx-font-size: 16px;");
+		addObstacle.setStyle(creationButtonStyle);
 
 		addObstacle.setOnAction(e -> {
 
@@ -209,6 +226,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		});
 
 		Button addRobot = new Button("Add Robot");
+		addRobot.setStyle(creationButtonStyle);
 		addRobot.setOnAction(e -> {
 		    TextInputDialog dialog = new TextInputDialog();
 		    dialog.setTitle("Add robot");
@@ -251,7 +269,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 
 		Button move = new Button("Move");
-
+		move.setStyle(actionButtonStyle);
 		move.setOnAction(event ->{
 			Position pos = new Position((int) this.activeControlledR.getCenterX(), (int) this.activeControlledR.getCenterY());
 			for(Robot ctrlRobot : environment.getList()){
@@ -268,7 +286,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		});
 
 		Button turnR = new Button("Right");
-
+		turnR.setStyle(actionButtonStyle);
 		turnR.setOnAction(event ->{
 			Set<Robot> robotList = environment.getList();
 			for(Robot robot : robotList){
@@ -281,7 +299,7 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		});
 
 		Button turnL = new Button("Left");
-
+		turnL.setStyle(actionButtonStyle);
 		turnL.setOnAction(event ->{
 			Set<Robot> robotList = environment.getList();
 			for(Robot robot : robotList){
@@ -294,8 +312,6 @@ public class EnvPresenter extends Application implements Observable.Observer {
 		});
 
 		Button pauseButton = new Button("Pause");
-		pauseButton.setPrefWidth(65);
-
 		// Initial color setting based on initial pause state
 		updateButtonColor(pauseButton, this.pause);
 
@@ -483,11 +499,21 @@ public class EnvPresenter extends Application implements Observable.Observer {
 
 	private void updateButtonColor(Button button, boolean isPaused) {
 	    if (isPaused) {
-									button.setText("Play");
-	        button.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+			button.setText("Play");
+	        button.setStyle("-fx-background-color: linear-gradient(#7fcd91, #0f3d0f), " +
+    	                           "radial-gradient(center 50% -40%, radius 200%, #5a9f6e 45%, #1e4b23 50%); " +
+    	                           "-fx-background-radius: 6; " +
+    	                           "-fx-background-color: green; -fx-text-fill: white;" +
+    	                           "-fx-font-weight: bold; " +
+    	                           "-fx-font-size: 14px;");
 	    } else {
-									button.setText("Pause");
-	        button.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+			button.setText("Pause");
+	        button.setStyle("-fx-background-color: linear-gradient(#7fcd91, #0f3d0f), " +
+    	                           "radial-gradient(center 50% -40%, radius 200%, #5a9f6e 45%, #1e4b23 50%); " +
+    	                           "-fx-background-radius: 6; " +
+    	                           "-fx-background-color: red; -fx-text-fill: white;" +
+    	                           "-fx-font-weight: bold; " +
+    	                           "-fx-font-size: 14px;");
 	    }
 	}
 
