@@ -1,4 +1,4 @@
-# IJA
+# SEMINÁŘ JAVA
 ## Autoři
 - Adam Nieslanik (xniesl00)
 - Marcin Sochacki (xsocha03)
